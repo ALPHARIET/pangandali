@@ -1,0 +1,100 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Search, Bell, History, LogIn, LogOut, User, ChevronDown } from 'lucide-react';
+
+function Navbar({ user, onLogout, onOpenAuth }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+      <div className="container navbar-container">
+        <div className="logo-wrapper">
+          <div className="logo-icon">PD</div>
+          <span>PanganDali</span>
+        </div>
+
+        <div className="nav-actions">
+          <div className="search-bar">
+            <Search size={16} className="text-muted" />
+            <input type="text" placeholder="Cari..." />
+          </div>
+
+          <button className="icon-btn" title="Notifikasi">
+            <Bell size={20} />
+          </button>
+          
+          <button className="icon-btn" title="Riwayat">
+            <History size={20} />
+          </button>
+
+          {user ? (
+            <div className="user-menu" ref={dropdownRef}>
+              <button 
+                className="user-avatar-btn" 
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <div className="avatar-circle">
+                  {user.name ? user.name.substring(0, 2).toUpperCase() : 'US'}
+                </div>
+                <ChevronDown size={14} className="text-muted" />
+              </button>
+              
+              <div className={`user-dropdown ${dropdownOpen ? 'show' : ''}`}>
+                <div className="dropdown-header">
+                  <div className="dropdown-name">{user.name}</div>
+                  <div className="dropdown-email">{user.email}</div>
+                  <div className="dropdown-role">{user.role}</div>
+                </div>
+                
+                <button className="dropdown-item">
+                  <User size={16} /> Profile Saya
+                </button>
+                
+                <button 
+                  className="dropdown-item logout" 
+                  onClick={() => {
+                    setDropdownOpen(false);
+                    onLogout();
+                  }}
+                >
+                  <LogOut size={16} /> Keluar
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button className="btn btn-primary btn-sm" onClick={onOpenAuth}>
+              <LogIn size={16} />
+              <span>Masuk</span>
+            </button>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+export default Navbar;
