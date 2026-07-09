@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Bell, History, LogIn, LogOut, User, ChevronDown } from 'lucide-react';
+import { Search, Bell, MessageSquare, LogIn, LogOut, User, ChevronDown, Menu, X } from 'lucide-react';
 
 function Navbar({ user, onLogout, onOpenAuth }) {
   const [scrolled, setScrolled] = useState(false);
@@ -8,14 +8,10 @@ function Navbar({ user, onLogout, onOpenAuth }) {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      setScrolled(window.scrollY > 80);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -30,25 +26,25 @@ function Navbar({ user, onLogout, onOpenAuth }) {
   }, []);
 
   return (
-    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <div className="container navbar-container">
+    <nav className={`navbar ${scrolled ? 'navbar--island' : ''}`}>
+      <div className="navbar-inner">
         <div className="logo-wrapper">
-          <div className="logo-icon">PD</div>
-          <span>PanganDali</span>
+          <div className="logo-icon">🌾</div>
+          <span className="logo-text">PanganDali</span>
         </div>
 
         <div className="nav-actions">
           <div className="search-bar">
-            <Search size={16} className="text-muted" />
+            <Search size={15} />
             <input type="text" placeholder="Cari..." />
           </div>
 
           <button className="icon-btn" title="Notifikasi">
-            <Bell size={20} />
+            <Bell size={18} />
           </button>
           
-          <button className="icon-btn" title="Riwayat">
-            <History size={20} />
+          <button className="icon-btn" title="Pesan">
+            <MessageSquare size={18} />
           </button>
 
           {user ? (
@@ -86,9 +82,9 @@ function Navbar({ user, onLogout, onOpenAuth }) {
               </div>
             </div>
           ) : (
-            <button className="btn btn-primary btn-sm" onClick={onOpenAuth}>
-              <LogIn size={16} />
+            <button className="btn btn-cta-nav" onClick={onOpenAuth}>
               <span>Masuk</span>
+              <LogIn size={15} />
             </button>
           )}
         </div>

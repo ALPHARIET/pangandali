@@ -1,4 +1,45 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { Users, Gauge, BarChart3 } from 'lucide-react';
+
+function AnimatedNumber({ value, suffix = '' }) {
+  const [display, setDisplay] = useState('0');
+  const ref = useRef(null);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated.current) {
+          hasAnimated.current = true;
+          const numericValue = parseInt(value.replace(/\D/g, ''), 10);
+          const duration = 1600;
+          const startTime = performance.now();
+
+          const animate = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const currentValue = Math.floor(numericValue * eased);
+            setDisplay(currentValue.toLocaleString() + suffix);
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            }
+          };
+
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [value, suffix]);
+
+  return <div className="stat-num" ref={ref}>{display}</div>;
+}
 
 function Dampak() {
   return (
@@ -14,12 +55,14 @@ function Dampak() {
             </div>
             
             <div className="dampak-stat">
-              <div className="stat-num">300+</div>
+              <Users size={20} className="dampak-stat-icon" />
+              <AnimatedNumber value="300" suffix="+" />
               <div className="stat-label">Petani Tergabung</div>
             </div>
             
             <div className="dampak-stat">
-              <div className="stat-num">60%</div>
+              <Gauge size={20} className="dampak-stat-icon" />
+              <AnimatedNumber value="60" suffix="%" />
               <div className="stat-label">Backhaul Efficiency</div>
             </div>
           </div>
