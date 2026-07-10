@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { 
   LayoutDashboard, AlertTriangle, MessageSquare, Truck, 
   BarChart3, LogOut, Bell, Search, MapPin, CheckCircle, 
-  TrendingUp, Compass, ArrowRight, ShieldAlert, Award, Map
+  TrendingUp, Compass, ArrowRight, ShieldAlert, Award, Map, UserCheck, XCircle
 } from 'lucide-react';
 import './AdminDashboard.css';
 
 function AdminDashboard({ user, onLogout }) {
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'ews', 'harvest', 'logistics', 'evaluation'
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'ews', 'harvest', 'logistics', 'evaluation', 'verification'
   const [selectedRegion, setSelectedRegion] = useState('Rejang Lebong');
   const [selectedCommodity, setSelectedCommodity] = useState('Cabai Merah');
   const [exportCount, setExportCount] = useState(0);
@@ -22,6 +22,9 @@ function AdminDashboard({ user, onLogout }) {
     { id: 4, wa: '+62 878-****-1004', raw: 'harga bawang merah melonjak drastis di pasar atas curup mencapai 45 ribu per kilo pasokan tipis', crop: 'Bawang Merah', qty: 'N/A (Pantauan)', loc: 'Pasar Atas Curup', status: 'Anomali - review', autoCheck: 'Lonjakan ekstrem vs historis', anomaly: true, evidence: 'Foto belum dikirim', reviewQueue: 'Ya', time: '3 Hours Ago' },
     { id: 5, wa: '+62 821-****-8842', raw: 'lapor wortel bersih 500kg sindang kelangi siap didistribusikan harga 6rb', crop: 'Wortel', qty: '500 Kg', loc: 'Sindang Kelangi', status: 'Terverifikasi otomatis', autoCheck: 'Profil petani sesuai', anomaly: false, evidence: 'Foto terkirim', reviewQueue: 'Tidak', time: '1 Day Ago' }
   ]);
+  const [verifications, setVerifications] = useState(() => {
+    return JSON.parse(localStorage.getItem('pangandali_verifications') || '[]');
+  });
   const adminInitials = user?.name ? user.name.slice(0, 2).toUpperCase() : 'AD';
   const adminDisplayName = user?.name || 'TPID Rejang Lebong';
   const adminRole = user?.role ? `${user.role} Pemerintah` : 'Admin Pemerintah';
@@ -50,6 +53,25 @@ function AdminDashboard({ user, onLogout }) {
       status: 'Baru'
     };
     setInterventions([newEntry, ...interventions]);
+  };
+
+  const handleVerifyAccount = (email, type, newStatus, reason = '') => {
+    // Update global verifications list
+    const updatedVerifications = verifications.map(v => 
+      v.email === email ? { ...v, status: newStatus } : v
+    );
+    setVerifications(updatedVerifications);
+    localStorage.setItem('pangandali_verifications', JSON.stringify(updatedVerifications));
+
+    // Update specific document
+    const storageKey = type === 'Driver' ? `pangandali_driver_docs_${email}` : `pangandali_distributor_docs_${email}`;
+    const docStr = localStorage.getItem(storageKey);
+    if (docStr) {
+      const docData = JSON.parse(docStr);
+      docData.status = newStatus;
+      docData.rejectionReason = reason;
+      localStorage.setItem(storageKey, JSON.stringify(docData));
+    }
   };
 
   // Dynamic Contextual Breadcrumb
@@ -103,6 +125,14 @@ function AdminDashboard({ user, onLogout }) {
             <span>Evaluasi</span>
             <span className="breadcrumb-sep">/</span>
             <span className="breadcrumb-active">Dampak & SDGs</span>
+          </>
+        );
+      case 'verification':
+        return (
+          <>
+            <span>Pengaturan</span>
+            <span className="breadcrumb-sep">/</span>
+            <span className="breadcrumb-active">Verifikasi Akun</span>
           </>
         );
       default:
@@ -179,6 +209,16 @@ function AdminDashboard({ user, onLogout }) {
             <div className="sidebar-item-content">
               <BarChart3 size={18} />
               <span>Impact Evaluation</span>
+            </div>
+          </button>
+
+          <button 
+            className={`sidebar-item ${activeTab === 'verification' ? 'active' : ''}`}
+            onClick={() => setActiveTab('verification')}
+          >
+            <div className="sidebar-item-content">
+              <UserCheck size={18} />
+              <span>Verifikasi Akun</span>
             </div>
           </button>
         </nav>
@@ -947,6 +987,92 @@ function AdminDashboard({ user, onLogout }) {
                       <text x="467" y="230" textAnchor="middle" fill="#64748b" style={{ fontSize: '11px', fontWeight: 'bold' }}>Tahun 2026 (Proyeksi)</text>
                     </svg>
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* SECTION 8: Account Verification View */}
+          {activeTab === 'verification' && (
+            <div className="section-container">
+              <div className="section-header">
+                <div>
+                  <h2 className="section-title">Verifikasi Akun Mitra</h2>
+                  <p className="section-desc">Tinjau dan setujui pendaftaran akun Driver Backhaul dan Distributor.</p>
+                </div>
+              </div>
+
+              <div className="card full-width">
+                <div className="card-header">
+                  <h3 className="card-title">Daftar Pengajuan Menunggu</h3>
+                </div>
+                <div className="card-body" style={{ padding: '0', overflowX: 'auto' }}>
+                  <table className="dense-table">
+                    <thead>
+                      <tr>
+                        <th>Tanggal</th>
+                        <th>Nama / Perusahaan</th>
+                        <th>Email / Kontak</th>
+                        <th>Tipe Mitra</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {verifications.length === 0 ? (
+                        <tr>
+                          <td colSpan="6" style={{ textAlign: 'center', padding: '30px', color: '#64748b' }}>
+                            Belum ada pengajuan verifikasi.
+                          </td>
+                        </tr>
+                      ) : (
+                        verifications.map((v) => (
+                          <tr key={v.id}>
+                            <td>{new Date(v.date).toLocaleDateString('id-ID')}</td>
+                            <td style={{ fontWeight: '500' }}>{v.name}</td>
+                            <td>{v.email}</td>
+                            <td>
+                              <span className={`badge ${v.type === 'Driver' ? 'success' : 'primary'}`}>
+                                {v.type}
+                              </span>
+                            </td>
+                            <td>
+                              <span className={`badge ${
+                                v.status === 'approved' ? 'success' : 
+                                v.status === 'rejected' ? 'danger' : 'warning'
+                              }`}>
+                                {v.status === 'approved' ? 'Disetujui' : 
+                                 v.status === 'rejected' ? 'Ditolak' : 'Menunggu'}
+                              </span>
+                            </td>
+                            <td>
+                              {v.status === 'pending' && (
+                                <div style={{ display: 'flex', gap: '8px' }}>
+                                  <button 
+                                    className="btn btn-sm btn-primary" 
+                                    onClick={() => handleVerifyAccount(v.email, v.type, 'approved')}
+                                    style={{ padding: '6px 10px', fontSize: '12px' }}
+                                  >
+                                    <CheckCircle size={14} style={{ marginRight: '4px' }} /> Setujui
+                                  </button>
+                                  <button 
+                                    className="btn btn-sm" 
+                                    onClick={() => {
+                                      const reason = prompt('Alasan penolakan:');
+                                      if (reason) handleVerifyAccount(v.email, v.type, 'rejected', reason);
+                                    }}
+                                    style={{ padding: '6px 10px', fontSize: '12px', background: '#fee2e2', color: '#dc2626', border: 'none' }}
+                                  >
+                                    <XCircle size={14} style={{ marginRight: '4px' }} /> Tolak
+                                  </button>
+                                </div>
+                              )}
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>

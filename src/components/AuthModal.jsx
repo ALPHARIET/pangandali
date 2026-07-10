@@ -50,6 +50,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
 
     let foundUser = null;
     let isDriverLogin = false;
+    let isDistributorLogin = false;
 
     // Support admin credentials
     if (loginIdentifier.toLowerCase() === 'admin' && loginPassword === 'admin') {
@@ -60,7 +61,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
         role: 'Admin'
       };
     } else {
-      // Check driver accounts first
+      // Check driver accounts
       const defaultDrivers = [
         {
           name: 'Andi Pratama',
@@ -82,14 +83,39 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
           u.password === loginPassword
       );
 
+      // Check distributor accounts
+      const defaultDistributors = [
+        {
+          name: 'Budi (Grosir)',
+          email: 'distributor',
+          phone: '081299998888',
+          password: 'distributor123',
+          role: 'Distributor',
+          isFirstLogin: true,
+          verificationStatus: 'none'
+        }
+      ];
+      const storedDistributors = JSON.parse(localStorage.getItem('pangandali_distributors') || '[]');
+      const allDistributors = [...defaultDistributors, ...storedDistributors];
+
+      const distributorMatch = allDistributors.find(
+        (u) =>
+          (u.email?.toLowerCase() === loginIdentifier.toLowerCase() ||
+            u.phone === loginIdentifier) &&
+          u.password === loginPassword
+      );
+
       if (driverMatch) {
         foundUser = driverMatch;
         isDriverLogin = true;
+      } else if (distributorMatch) {
+        foundUser = distributorMatch;
+        isDistributorLogin = true;
       } else {
         // Get registered users from localStorage
         const users = JSON.parse(localStorage.getItem('pangandali_users') || '[]');
         
-        // Default admin account for easy testing
+        // Default normal user account for easy testing
         const defaultUser = {
           name: 'Budi Santoso',
           email: 'budi@pangandali.id',
@@ -111,6 +137,9 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
         if (isDriverLogin) {
           // Save driver session separately
           localStorage.setItem('pangandali_driver_session', JSON.stringify(foundUser));
+        } else if (isDistributorLogin) {
+          // Save distributor session separately
+          localStorage.setItem('pangandali_distributor_session', JSON.stringify(foundUser));
         } else {
           localStorage.setItem('pangandali_session', JSON.stringify(foundUser));
         }
@@ -256,8 +285,10 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
               </div>
             </div>
 
-            <div className="login-hint">
-              Admin: <strong>admin</strong> / <strong>admin</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Driver: <strong>driver</strong> / <strong>driver123</strong>
+            <div className="login-hint" style={{ fontSize: '11px', textAlign: 'center' }}>
+              <strong>Admin:</strong> admin / admin<br/>
+              <strong>Driver:</strong> driver / driver123<br/>
+              <strong>Distributor:</strong> distributor / distributor123
             </div>
 
             <button type="submit" className="btn btn-primary" style={{ marginTop: '8px' }}>

@@ -11,6 +11,8 @@ import AdminDashboard from './components/AdminDashboard';
 import DriverVerification from './components/driver/DriverVerification';
 import DriverHome from './components/driver/DriverHome';
 import './components/driver/DriverStyles.css';
+import DistributorVerification from './components/distributor/DistributorVerification';
+import DistributorHome from './components/distributor/DistributorHome';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -18,6 +20,9 @@ function App() {
 
   // Driver state
   const [driverUser, setDriverUser] = useState(null);
+
+  // Distributor state
+  const [distributorUser, setDistributorUser] = useState(null);
 
   // Check if user session exists on mount
   useEffect(() => {
@@ -41,12 +46,25 @@ function App() {
         localStorage.removeItem('pangandali_driver_session');
       }
     }
+
+    // Check distributor session
+    const distributorSession = localStorage.getItem('pangandali_distributor_session');
+    if (distributorSession) {
+      try {
+        setDistributorUser(JSON.parse(distributorSession));
+      } catch (e) {
+        console.error('Gagal memuat sesi distributor:', e);
+        localStorage.removeItem('pangandali_distributor_session');
+      }
+    }
   }, []);
 
   const handleLoginSuccess = (loggedInUser) => {
-    // If login is a driver, route to driver flow
+    // Route to appropriate flow based on role
     if (loggedInUser.role === 'Driver') {
       setDriverUser(loggedInUser);
+    } else if (loggedInUser.role === 'Distributor') {
+      setDistributorUser(loggedInUser);
     } else {
       setUser(loggedInUser);
     }
@@ -71,6 +89,20 @@ function App() {
     }
   };
 
+  // Distributor handlers
+  const handleDistributorLogout = () => {
+    localStorage.removeItem('pangandali_distributor_session');
+    setDistributorUser(null);
+  };
+
+  const handleDistributorStatusChange = (status) => {
+    if (status === 'approved') {
+      const updatedDistributor = { ...distributorUser, verificationStatus: 'approved', isFirstLogin: false };
+      setDistributorUser(updatedDistributor);
+      localStorage.setItem('pangandali_distributor_session', JSON.stringify(updatedDistributor));
+    }
+  };
+
   const handleCTA = () => {
     if (user) {
       alert(`Anda telah masuk sebagai ${user.name} (${user.role}). Selamat datang di Dashboard PanganDali!`);
@@ -81,7 +113,6 @@ function App() {
 
   // ─── DRIVER FLOW ───
   if (driverUser) {
-    // Check verification status
     const docData = localStorage.getItem(`pangandali_driver_docs_${driverUser.email}`);
     const isVerified = docData ? JSON.parse(docData).status === 'approved' : false;
     const isFirstLogin = driverUser.isFirstLogin !== false && !isVerified;
@@ -95,9 +126,25 @@ function App() {
         />
       );
     }
-
-    // Verified driver -> show home
     return <DriverHome user={driverUser} onLogout={handleDriverLogout} />;
+  }
+
+  // ─── DISTRIBUTOR FLOW ───
+  if (distributorUser) {
+    const docData = localStorage.getItem(`pangandali_distributor_docs_${distributorUser.email}`);
+    const isVerified = docData ? JSON.parse(docData).status === 'approved' : false;
+    const isFirstLogin = distributorUser.isFirstLogin !== false && !isVerified;
+
+    if (isFirstLogin || (docData && JSON.parse(docData).status !== 'approved')) {
+      return (
+        <DistributorVerification
+          user={distributorUser}
+          onLogout={handleDistributorLogout}
+          onStatusChange={handleDistributorStatusChange}
+        />
+      );
+    }
+    return <DistributorHome user={distributorUser} onLogout={handleDistributorLogout} />;
   }
 
   // ─── ADMIN FLOW ───

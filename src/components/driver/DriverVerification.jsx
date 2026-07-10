@@ -99,6 +99,7 @@ function DriverVerification({ user, onLogout, onStatusChange }) {
     } else {
       // Submit
       const docData = {
+        type: 'driver',
         submitted: true,
         status: 'pending',
         formData,
@@ -107,8 +108,30 @@ function DriverVerification({ user, onLogout, onStatusChange }) {
         ),
         submittedAt: new Date().toISOString(),
         rejectionReason: '',
+        userEmail: user?.email,
+        userName: user?.name,
       };
       localStorage.setItem(`pangandali_driver_docs_${user?.email}`, JSON.stringify(docData));
+
+      // Add to global verifications list for admin
+      const allVerifications = JSON.parse(localStorage.getItem('pangandali_verifications') || '[]');
+      const newVerification = {
+        id: `driver-${Date.now()}`,
+        type: 'Driver',
+        email: user?.email,
+        name: user?.name || 'Driver',
+        date: new Date().toISOString(),
+        status: 'pending'
+      };
+      // Check if already exists and update, or add new
+      const existingIdx = allVerifications.findIndex(v => v.email === user?.email);
+      if(existingIdx >= 0) {
+          allVerifications[existingIdx] = newVerification;
+      } else {
+          allVerifications.push(newVerification);
+      }
+      localStorage.setItem('pangandali_verifications', JSON.stringify(allVerifications));
+
       setSubmitted(true);
       setVerificationStatus('pending');
     }
