@@ -49,6 +49,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
     }
 
     let foundUser = null;
+    let isDriverLogin = false;
 
     // Support admin credentials
     if (loginIdentifier.toLowerCase() === 'admin' && loginPassword === 'admin') {
@@ -59,29 +60,60 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
         role: 'Admin'
       };
     } else {
-      // Get registered users from localStorage
-      const users = JSON.parse(localStorage.getItem('pangandali_users') || '[]');
-      
-      // Default admin account for easy testing
-      const defaultUser = {
-        name: 'Budi Santoso',
-        email: 'budi@pangandali.id',
-        password: 'password123',
-        role: 'TPID'
-      };
-      
-      const allUsers = [defaultUser, ...users];
+      // Check driver accounts first
+      const defaultDrivers = [
+        {
+          name: 'Andi Pratama',
+          email: 'driver',
+          phone: '081234567890',
+          password: 'driver123',
+          role: 'Driver',
+          isFirstLogin: true,
+          verificationStatus: 'none'
+        }
+      ];
+      const storedDrivers = JSON.parse(localStorage.getItem('pangandali_drivers') || '[]');
+      const allDrivers = [...defaultDrivers, ...storedDrivers];
 
-      foundUser = allUsers.find(
-        (u) => u.email.toLowerCase() === loginIdentifier.toLowerCase() && u.password === loginPassword
+      const driverMatch = allDrivers.find(
+        (u) =>
+          (u.email?.toLowerCase() === loginIdentifier.toLowerCase() ||
+            u.phone === loginIdentifier) &&
+          u.password === loginPassword
       );
+
+      if (driverMatch) {
+        foundUser = driverMatch;
+        isDriverLogin = true;
+      } else {
+        // Get registered users from localStorage
+        const users = JSON.parse(localStorage.getItem('pangandali_users') || '[]');
+        
+        // Default admin account for easy testing
+        const defaultUser = {
+          name: 'Budi Santoso',
+          email: 'budi@pangandali.id',
+          password: 'password123',
+          role: 'TPID'
+        };
+        
+        const allUsers = [defaultUser, ...users];
+
+        foundUser = allUsers.find(
+          (u) => u.email.toLowerCase() === loginIdentifier.toLowerCase() && u.password === loginPassword
+        );
+      }
     }
 
     if (foundUser) {
       setSuccessMsg('Login berhasil! Mengalihkan...');
       setTimeout(() => {
-        // Save session in localStorage
-        localStorage.setItem('pangandali_session', JSON.stringify(foundUser));
+        if (isDriverLogin) {
+          // Save driver session separately
+          localStorage.setItem('pangandali_driver_session', JSON.stringify(foundUser));
+        } else {
+          localStorage.setItem('pangandali_session', JSON.stringify(foundUser));
+        }
         onLoginSuccess(foundUser);
         onClose();
       }, 1200);
@@ -225,7 +257,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
             </div>
 
             <div className="login-hint">
-              Akun admin demo: <strong>admin</strong> / <strong>admin</strong>
+              Admin: <strong>admin</strong> / <strong>admin</strong>&nbsp;&nbsp;|&nbsp;&nbsp;Driver: <strong>driver</strong> / <strong>driver123</strong>
             </div>
 
             <button type="submit" className="btn btn-primary" style={{ marginTop: '8px' }}>
