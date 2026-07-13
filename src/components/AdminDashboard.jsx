@@ -2,24 +2,25 @@ import React, { useState } from 'react';
 import { 
   LayoutDashboard, AlertTriangle, MessageSquare, Truck, 
   BarChart3, LogOut, Bell, Search, MapPin, CheckCircle, 
-  TrendingUp, Compass, ArrowRight, ShieldAlert, Award, Map, UserCheck, XCircle
+  TrendingUp, Compass, ArrowRight, ShieldAlert, Award, Map, UserCheck, XCircle, Globe
 } from 'lucide-react';
+import ImpactDashboard from './dashboard/ImpactDashboard';
 import './AdminDashboard.css';
 
 function AdminDashboard({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'ews', 'harvest', 'logistics', 'evaluation', 'verification'
   const [selectedRegion, setSelectedRegion] = useState('Rejang Lebong');
-  const [selectedCommodity, setSelectedCommodity] = useState('Cabai Merah');
+  const [selectedCommodity, setSelectedCommodity] = useState('Cabai Besar');
   const [exportCount, setExportCount] = useState(0);
   const [interventions, setInterventions] = useState([
-    { id: 1, title: 'Intervensi distribusi cabai', region: 'Curup Timur', commodity: 'Cabai Merah', action: 'Kirim 1.2 ton dari surplus Selupu Rejang', impact: 'Harga turun 8% dalam 48 jam', status: 'Terealisasi' },
-    { id: 2, title: 'Playbook pasar siaga', region: 'Kota Bengkulu', commodity: 'Bawang Merah', action: 'Fasilitasi pembelian langsung ke distributor', impact: 'Ketersediaan meningkat 12%', status: 'Dalam proses' }
+    { id: 1, title: 'Intervensi distribusi cabai besar', region: 'Curup Timur', commodity: 'Cabai Besar', action: 'Kirim 1.2 ton dari surplus Selupu Rejang', impact: 'Harga turun 8% dalam 48 jam', status: 'Terealisasi' },
+    { id: 2, title: 'Playbook pasar siaga', region: 'Kota Bengkulu', commodity: 'Terung', action: 'Fasilitasi pembelian langsung ke distributor', impact: 'Ketersediaan meningkat 12%', status: 'Dalam proses' }
   ]);
   const [nlpReports, setNlpReports] = useState([
-    { id: 1, wa: '+62 812-****-3392', raw: 'lapor panen cabai merah 350 kg di kelurahan selupu rejang harga jual 22 ribu rupiah', crop: 'Cabai Merah', qty: '350 Kg', loc: 'Selupu Rejang', status: 'Terverifikasi otomatis', autoCheck: 'Profil petani sesuai', anomaly: false, evidence: 'Foto terkirim', reviewQueue: 'Tidak', time: '10 Mins Ago' },
+    { id: 1, wa: '+62 812-****-3392', raw: 'lapor panen cabai besar 350 kg di kelurahan selupu rejang harga jual 22 ribu rupiah', crop: 'Cabai Besar', qty: '350 Kg', loc: 'Selupu Rejang', status: 'Terverifikasi otomatis', autoCheck: 'Profil petani sesuai', anomaly: false, evidence: 'Foto terkirim', reviewQueue: 'Tidak', time: '10 Mins Ago' },
     { id: 2, wa: '+62 853-****-9121', raw: 'panen kubis 1.2 ton daerah bermani ulu siap angkut harga nego tipis', crop: 'Kubis', qty: '1,200 Kg', loc: 'Bermani Ulu', status: 'Anomali - review', autoCheck: 'Pola pelaporan tidak wajar', anomaly: true, evidence: 'Foto belum dikirim', reviewQueue: 'Ya', time: '34 Mins Ago' },
-    { id: 3, wa: '+62 813-****-5541', raw: 'panen raya tomat merah melimpah 800 kilo harga petani 4000 saja per kilo curup timur', crop: 'Tomat', qty: '800 Kg', loc: 'Curup Timur', status: 'Terverifikasi otomatis', autoCheck: 'Profil petani sesuai', anomaly: false, evidence: 'Foto terkirim', reviewQueue: 'Tidak', time: '1 Hour Ago' },
-    { id: 4, wa: '+62 878-****-1004', raw: 'harga bawang merah melonjak drastis di pasar atas curup mencapai 45 ribu per kilo pasokan tipis', crop: 'Bawang Merah', qty: 'N/A (Pantauan)', loc: 'Pasar Atas Curup', status: 'Anomali - review', autoCheck: 'Lonjakan ekstrem vs historis', anomaly: true, evidence: 'Foto belum dikirim', reviewQueue: 'Ya', time: '3 Hours Ago' },
+    { id: 3, wa: '+62 813-****-5541', raw: 'panen raya kembang kol melimpah 800 kilo harga petani 4000 saja per kilo curup timur', crop: 'Kembang Kol', qty: '800 Kg', loc: 'Curup Timur', status: 'Terverifikasi otomatis', autoCheck: 'Profil petani sesuai', anomaly: false, evidence: 'Foto terkirim', reviewQueue: 'Tidak', time: '1 Hour Ago' },
+    { id: 4, wa: '+62 878-****-1004', raw: 'harga terung melonjak drastis di pasar atas curup mencapai 45 ribu per kilo pasokan tipis', crop: 'Terung', qty: 'N/A (Pantauan)', loc: 'Pasar Atas Curup', status: 'Anomali - review', autoCheck: 'Lonjakan ekstrem vs historis', anomaly: true, evidence: 'Foto belum dikirim', reviewQueue: 'Ya', time: '3 Hours Ago' },
     { id: 5, wa: '+62 821-****-8842', raw: 'lapor wortel bersih 500kg sindang kelangi siap didistribusikan harga 6rb', crop: 'Wortel', qty: '500 Kg', loc: 'Sindang Kelangi', status: 'Terverifikasi otomatis', autoCheck: 'Profil petani sesuai', anomaly: false, evidence: 'Foto terkirim', reviewQueue: 'Tidak', time: '1 Day Ago' }
   ]);
   const [verifications, setVerifications] = useState(() => {
@@ -182,15 +183,6 @@ function AdminDashboard({ user, onLogout }) {
             </div>
           </button>
 
-          <button 
-            className={`sidebar-item ${activeTab === 'logistics' ? 'active' : ''}`}
-            onClick={() => setActiveTab('logistics')}
-          >
-            <div className="sidebar-item-content">
-              <Truck size={18} />
-              <span>Logistics Matching</span>
-            </div>
-          </button>
 
           <button 
             className={`sidebar-item ${activeTab === 'map' ? 'active' : ''}`}
@@ -306,7 +298,7 @@ function AdminDashboard({ user, onLogout }) {
                   </div>
                   <div className="metric-value">Selupu Rejang</div>
                   <div className="metric-footer">
-                    <span>Hortikultura dominan: Kubis & Cabai</span>
+                    <span>Hortikultura dominan: Kubis & Cabai Besar</span>
                   </div>
                 </div>
 
@@ -353,16 +345,16 @@ function AdminDashboard({ user, onLogout }) {
                 <div className="alert-card warning">
                   <div className="alert-icon-box"><AlertTriangle size={18} /></div>
                   <div className="alert-body">
-                    <div className="alert-title">WARNING: Pasokan Cabai Merah</div>
-                    <div className="alert-desc">Terjadi penurunan volume panen Cabai Merah sebesar 25% akibat cuaca buruk di Sindang Keriang.</div>
+                    <div className="alert-title">WARNING: Pasokan Cabai Besar</div>
+                    <div className="alert-desc">Terjadi penurunan volume panen Cabai Besar sebesar 25% akibat cuaca buruk di Sindang Keriang.</div>
                   </div>
                 </div>
 
                 <div className="alert-card danger">
                   <div className="alert-icon-box"><ShieldAlert size={18} /></div>
                   <div className="alert-body">
-                    <div className="alert-title">DANGER: Harga Bawang Merah</div>
-                    <div className="alert-desc">Harga Bawang Merah di pasar konsumen melonjak melampaui batas aman atas sebesar 35% akibat kendala distribusi.</div>
+                    <div className="alert-title">DANGER: Harga Terung</div>
+                    <div className="alert-desc">Harga Terung di pasar konsumen melonjak melampaui batas aman atas sebesar 35% akibat kendala distribusi.</div>
                   </div>
                 </div>
               </div>
@@ -376,7 +368,7 @@ function AdminDashboard({ user, onLogout }) {
                     <div className="chart-legends">
                       <div className="legend-item">
                         <div className="legend-color" style={{ backgroundColor: '#008744' }}></div>
-                        <span>Cabai Merah</span>
+                        <span>Cabai Besar</span>
                       </div>
                       <div className="legend-item">
                         <div className="legend-color" style={{ backgroundColor: '#f2994a' }}></div>
@@ -384,7 +376,7 @@ function AdminDashboard({ user, onLogout }) {
                       </div>
                       <div className="legend-item">
                         <div className="legend-color" style={{ backgroundColor: '#ef4444' }}></div>
-                        <span>Bawang Merah</span>
+                        <span>Terung</span>
                       </div>
                     </div>
                   </div>
@@ -396,7 +388,7 @@ function AdminDashboard({ user, onLogout }) {
                       <line x1="0" y1="90" x2="500" y2="90" stroke="#f1f5f9" strokeWidth="1" />
                       <line x1="0" y1="140" x2="500" y2="140" stroke="#f1f5f9" strokeWidth="1" />
                       
-                      {/* Cabai Merah Line (Green) */}
+                      {/* Cabai Besar Line (Green) */}
                       <path 
                         d="M0,130 C80,140 160,80 240,90 C320,100 400,60 500,45" 
                         fill="none" 
@@ -410,7 +402,7 @@ function AdminDashboard({ user, onLogout }) {
                         stroke="#f2994a" 
                         strokeWidth="3" 
                       />
-                      {/* Bawang Merah Line (Red) */}
+                      {/* Terung Line (Red) */}
                       <path 
                         d="M0,100 C80,95 160,110 240,105 C320,80 400,60 500,30" 
                         fill="none" 
@@ -451,7 +443,7 @@ function AdminDashboard({ user, onLogout }) {
                         </tr>
                         <tr>
                           <td>Palembang</td>
-                          <td>Cabai Merah</td>
+                          <td>Cabai Besar</td>
                           <td>
                             <div className="progress-container">
                               <span style={{ minWidth: '35px' }}>64%</span>
@@ -463,7 +455,7 @@ function AdminDashboard({ user, onLogout }) {
                         </tr>
                         <tr>
                           <td>Jakarta</td>
-                          <td>Tomat</td>
+                          <td>Kembang Kol</td>
                           <td>
                             <div className="progress-container">
                               <span style={{ minWidth: '35px' }}>85%</span>
@@ -475,7 +467,7 @@ function AdminDashboard({ user, onLogout }) {
                         </tr>
                         <tr>
                           <td>Kepahiang</td>
-                          <td>Bawang Merah</td>
+                          <td>Terung</td>
                           <td>
                             <div className="progress-container">
                               <span style={{ minWidth: '35px' }}>38%</span>
@@ -487,6 +479,161 @@ function AdminDashboard({ user, onLogout }) {
                         </tr>
                       </tbody>
                     </table>
+                  </div>
+                </div>
+              </div>
+
+              {/* Backhaul & Logistics Quick Stats */}
+              <div className="alert-section-title" style={{ marginTop: '8px' }}>
+                <Truck size={18} style={{ color: '#3b82f6' }} />
+                <span>Backhaul & Logistik Overview</span>
+              </div>
+
+              <div className="overview-grid">
+                <div className="metric-card info">
+                  <div className="metric-header">
+                    <span className="metric-title">Truk Kosong Terpantau</span>
+                    <div className="metric-icon-box"><Truck size={16} /></div>
+                  </div>
+                  <div className="metric-value">42 Truk</div>
+                  <div className="metric-footer">
+                    <span>Di sekitar koridor Rejang Lebong</span>
+                  </div>
+                </div>
+
+                <div className="metric-card primary">
+                  <div className="metric-header">
+                    <span className="metric-title">Utilisasi Muatan Balik</span>
+                    <div className="metric-icon-box"><TrendingUp size={16} /></div>
+                  </div>
+                  <div className="metric-value">67.8%</div>
+                  <div className="metric-footer">
+                    <span className="badge badge-success">+7.8%</span>
+                    <span>Melebihi target 60%</span>
+                  </div>
+                </div>
+
+                <div className="metric-card accent">
+                  <div className="metric-header">
+                    <span className="metric-title">Biaya Logistik Dihemat</span>
+                    <div className="metric-icon-box"><Award size={16} /></div>
+                  </div>
+                  <div className="metric-value">Rp 128.5 Jt</div>
+                  <div className="metric-footer">
+                    <span>Kumulatif penghematan backhaul</span>
+                  </div>
+                </div>
+
+                <div className="metric-card danger">
+                  <div className="metric-header">
+                    <span className="metric-title">Food Loss Prevented</span>
+                    <div className="metric-icon-box"><ShieldAlert size={16} /></div>
+                  </div>
+                  <div className="metric-value">520 Ton</div>
+                  <div className="metric-footer">
+                    <span className="badge badge-success">↑ 18%</span>
+                    <span>dari tahun lalu</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Intervention Log */}
+              <div className="dashboard-details-grid" style={{ gridTemplateColumns: '1fr' }}>
+                <div className="dashboard-panel">
+                  <div className="panel-header">
+                    <span className="panel-title">Log Intervensi Distribusi</span>
+                  </div>
+                  <div className="dense-table-wrapper">
+                    <table className="dense-table">
+                      <thead>
+                        <tr>
+                          <th>Intervensi</th>
+                          <th>Wilayah</th>
+                          <th>Komoditas</th>
+                          <th>Tindakan</th>
+                          <th>Dampak</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {interventions.map((item) => (
+                          <tr key={item.id}>
+                            <td style={{ fontWeight: 600 }}>{item.title}</td>
+                            <td>{item.region}</td>
+                            <td>{item.commodity}</td>
+                            <td style={{ fontSize: '12px' }}>{item.action}</td>
+                            <td style={{ fontSize: '12px' }}>{item.impact}</td>
+                            <td>
+                              <span className={`badge ${item.status === 'Terealisasi' ? 'badge-success' : 'badge-warning'}`}>
+                                {item.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent Activity & Route Priority */}
+              <div className="dashboard-details-grid">
+                <div className="dashboard-panel">
+                  <div className="panel-header">
+                    <span className="panel-title">Aktivitas Terbaru</span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    {[
+                      { time: '10 menit lalu', text: 'Laporan panen cabai besar 350 kg diterima dari Selupu Rejang', type: 'success' },
+                      { time: '34 menit lalu', text: 'Anomali terdeteksi pada laporan kubis 1.2 ton dari Bermani Ulu', type: 'warning' },
+                      { time: '1 jam lalu', text: 'Panen kembang kol 800 kg dari Curup Timur terverifikasi otomatis', type: 'success' },
+                      { time: '3 jam lalu', text: 'Harga terung melonjak 35% di Pasar Atas Curup', type: 'danger' },
+                      { time: '1 hari lalu', text: 'Wortel 500 kg dari Sindang Kelangi siap didistribusikan', type: 'success' },
+                    ].map((act, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '10px 0', borderBottom: '1px solid #f1f5f9' }}>
+                        <div style={{ width: '8px', height: '8px', borderRadius: '50%', marginTop: '6px', flexShrink: 0, backgroundColor: act.type === 'success' ? '#16a34a' : act.type === 'warning' ? '#f59e0b' : '#ef4444' }}></div>
+                        <div>
+                          <div style={{ fontSize: '13px', color: '#334155' }}>{act.text}</div>
+                          <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>{act.time}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="dashboard-panel">
+                  <div className="panel-header">
+                    <span className="panel-title">Rute Prioritas Hari Ini</span>
+                  </div>
+                  <div className="route-list">
+                    <div className="route-card">
+                      <div>
+                        <span className="route-label">Kubis</span>
+                        <strong>Selupu Rejang ke Kota Bengkulu</strong>
+                      </div>
+                      <span className="badge badge-success">92% siap</span>
+                    </div>
+                    <div className="route-card">
+                      <div>
+                        <span className="route-label">Cabai Besar</span>
+                        <strong>Bermani Ulu ke Palembang</strong>
+                      </div>
+                      <span className="badge badge-warning">64% siap</span>
+                    </div>
+                    <div className="route-card">
+                      <div>
+                        <span className="route-label">Terung</span>
+                        <strong>Curup Tengah ke Kepahiang</strong>
+                      </div>
+                      <span className="badge badge-danger">38% kritis</span>
+                    </div>
+                    <div className="route-card">
+                      <div>
+                        <span className="route-label">Kembang Kol</span>
+                        <strong>Curup Timur ke Bengkulu Kota</strong>
+                      </div>
+                      <span className="badge badge-success">88% siap</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -514,10 +661,11 @@ function AdminDashboard({ user, onLogout }) {
                   <label className="control-group">
                     <span>Komoditas</span>
                     <select value={selectedCommodity} onChange={(e) => setSelectedCommodity(e.target.value)}>
-                      <option>Cabai Merah</option>
-                      <option>Bawang Merah</option>
+                      <option>Cabai Besar</option>
                       <option>Kubis</option>
-                      <option>Tomat</option>
+                      <option>Terung</option>
+                      <option>Wortel</option>
+                      <option>Kembang Kol</option>
                     </select>
                   </label>
                   <div className="status-pill">Ekspor ke TPID: {exportCount}</div>
@@ -536,14 +684,14 @@ function AdminDashboard({ user, onLogout }) {
                       <span className="alert-level-title">Kuning</span>
                       <span className="badge badge-warning">Siaga</span>
                     </div>
-                    <p>Cabai merah di Curup Timur menurun 18% karena cuaca dan distribusi belum optimal.</p>
+                    <p>Cabai besar di Curup Timur menurun 18% karena cuaca dan distribusi belum optimal.</p>
                   </div>
                   <div className="alert-level-card red">
                     <div className="alert-level-head">
                       <span className="alert-level-title">Merah</span>
                       <span className="badge badge-danger">Kritis</span>
                     </div>
-                    <p>Bawang merah di Kota Bengkulu berisiko defisit 14 hari ke depan, harga naik 25% lebih tinggi.</p>
+                    <p>Terung di Kota Bengkulu berisiko defisit 14 hari ke depan, harga naik 25% lebih tinggi.</p>
                   </div>
                 </div>
               </div>
@@ -566,7 +714,7 @@ function AdminDashboard({ user, onLogout }) {
                       </thead>
                       <tbody>
                         <tr>
-                          <td>Cabai Merah</td>
+                          <td>Cabai Besar</td>
                           <td>Curup Timur</td>
                           <td>Turun 12%</td>
                           <td>Turun 18%</td>
@@ -580,7 +728,7 @@ function AdminDashboard({ user, onLogout }) {
                           <td><span className="badge badge-success">Aman</span></td>
                         </tr>
                         <tr>
-                          <td>Bawang Merah</td>
+                          <td>Terung</td>
                           <td>Kota Bengkulu</td>
                           <td>Defisit 8%</td>
                           <td>Defisit 14%</td>
@@ -753,116 +901,138 @@ function AdminDashboard({ user, onLogout }) {
 
           {/* Distribution Map View */}
           {activeTab === 'map' && (
-            <div className="distribution-map-grid">
-              <div className="distribution-map-panel">
-                <div className="panel-header">
-                  <span className="panel-title">Distribution Map Koridor Rejang Lebong</span>
-                  <span className="badge badge-info">Sinkron SDI 09:45 WIB</span>
-                </div>
-
-                <div className="map-canvas" aria-label="Peta distribusi komoditas PanganDali">
-                  <div className="map-region supply region-selupu">
-                    <span className="map-pin-label">Selupu Rejang</span>
-                    <strong>+5.2 Ton Kubis</strong>
-                  </div>
-                  <div className="map-region supply region-bermani">
-                    <span className="map-pin-label">Bermani Ulu</span>
-                    <strong>+1.8 Ton Cabai</strong>
-                  </div>
-                  <div className="map-region deficit region-bengkulu">
-                    <span className="map-pin-label">Kota Bengkulu</span>
-                    <strong>-4.8 Ton Kubis</strong>
-                  </div>
-                  <div className="map-region deficit region-palembang">
-                    <span className="map-pin-label">Palembang</span>
-                    <strong>-2.1 Ton Cabai</strong>
-                  </div>
-                  <div className="map-route route-main"></div>
-                  <div className="map-route route-secondary"></div>
-                </div>
-              </div>
-
-              <div className="dashboard-panel">
-                <div className="panel-header">
-                  <span className="panel-title">Rute Prioritas Hari Ini</span>
-                </div>
-
-                <div className="route-list">
-                  <div className="route-card">
-                    <div>
-                      <span className="route-label">Kubis</span>
-                      <strong>Selupu Rejang ke Kota Bengkulu</strong>
-                    </div>
-                    <span className="badge badge-success">92% siap</span>
-                  </div>
-                  <div className="route-card">
-                    <div>
-                      <span className="route-label">Cabai Merah</span>
-                      <strong>Bermani Ulu ke Palembang</strong>
-                    </div>
-                    <span className="badge badge-warning">64% siap</span>
-                  </div>
-                  <div className="route-card">
-                    <div>
-                      <span className="route-label">Bawang Merah</span>
-                      <strong>Curup Tengah ke Kepahiang</strong>
-                    </div>
-                    <span className="badge badge-danger">38% kritis</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* SECTION 6: Logistics & Empty Backhaul Node Network */}
-          {activeTab === 'logistics' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              {/* Top Metrics Row */}
               <div className="overview-grid">
                 <div className="metric-card primary">
                   <div className="metric-header">
-                    <span className="metric-title">Live Empty Trucks Counter</span>
-                    <div className="metric-icon-box"><Truck size={16} /></div>
+                    <span className="metric-title">Rute Aktif</span>
+                    <div className="metric-icon-box"><Map size={16} /></div>
                   </div>
-                  <div className="metric-value">42 Truk</div>
+                  <div className="metric-value">24 Rute</div>
                   <div className="metric-footer">
-                    <span>Truk logistik kosong terpantau di sekitar Rejang Lebong</span>
+                    <span className="badge badge-success">+3</span>
+                    <span>rute baru bulan ini</span>
                   </div>
                 </div>
-
                 <div className="metric-card info">
                   <div className="metric-header">
-                    <span className="metric-title">Utilisasi Muatan Balik</span>
+                    <span className="metric-title">Total Volume</span>
                     <div className="metric-icon-box"><TrendingUp size={16} /></div>
                   </div>
-                  <div className="metric-value">67.8%</div>
+                  <div className="metric-value">4,250 Ton</div>
                   <div className="metric-footer">
-                    <span className="badge badge-success">+7.8%</span>
-                    <span>Melebihi target minimal 60%</span>
+                    <span className="badge badge-success">↑ 12%</span>
+                    <span>dari bulan lalu</span>
                   </div>
                 </div>
-
                 <div className="metric-card accent">
                   <div className="metric-header">
-                    <span className="metric-title">Biaya Logistik Dihemat</span>
-                    <div className="metric-icon-box"><Award size={16} /></div>
+                    <span className="metric-title">Waktu Tempuh Rata-rata</span>
+                    <div className="metric-icon-box"><CheckCircle size={16} /></div>
                   </div>
-                  <div className="metric-value">Rp 128.5 Jt</div>
+                  <div className="metric-value">18 Jam</div>
                   <div className="metric-footer">
-                    <span>Kumulatif penghematan efisiensi backhaul</span>
+                    <span className="badge badge-success">↓ 4 Jam</span>
+                    <span>lebih cepat</span>
+                  </div>
+                </div>
+                <div className="metric-card danger">
+                  <div className="metric-header">
+                    <span className="metric-title">Titik Rawan Distribusi</span>
+                    <div className="metric-icon-box"><ShieldAlert size={16} /></div>
+                  </div>
+                  <div className="metric-value">3 Titik</div>
+                  <div className="metric-footer">
+                    <span className="badge badge-danger">Perlu perhatian</span>
                   </div>
                 </div>
               </div>
 
-              {/* Interactive logical node map diagram */}
+              {/* Map + Route Priority */}
+              <div className="distribution-map-grid">
+                <div className="distribution-map-panel">
+                  <div className="panel-header">
+                    <span className="panel-title">Distribution Map Koridor Rejang Lebong</span>
+                    <span className="badge badge-info">Sinkron SDI 09:45 WIB</span>
+                  </div>
+
+                  <div className="map-canvas" aria-label="Peta distribusi komoditas PanganDali">
+                    <div className="map-region supply region-selupu">
+                      <span className="map-pin-label">Selupu Rejang</span>
+                      <strong>+5.2 Ton Kubis</strong>
+                    </div>
+                    <div className="map-region supply region-bermani">
+                      <span className="map-pin-label">Bermani Ulu</span>
+                      <strong>+1.8 Ton Cabai Besar</strong>
+                    </div>
+                    <div className="map-region deficit region-bengkulu">
+                      <span className="map-pin-label">Kota Bengkulu</span>
+                      <strong>-4.8 Ton Kubis</strong>
+                    </div>
+                    <div className="map-region deficit region-palembang">
+                      <span className="map-pin-label">Palembang</span>
+                      <strong>-2.1 Ton Cabai</strong>
+                    </div>
+                    <div className="map-route route-main"></div>
+                    <div className="map-route route-secondary"></div>
+                  </div>
+                </div>
+
+                <div className="dashboard-panel">
+                  <div className="panel-header">
+                    <span className="panel-title">Rute Prioritas Hari Ini</span>
+                  </div>
+
+                  <div className="route-list">
+                    <div className="route-card">
+                      <div>
+                        <span className="route-label">Kubis</span>
+                        <strong>Selupu Rejang ke Kota Bengkulu</strong>
+                      </div>
+                      <span className="badge badge-success">92% siap</span>
+                    </div>
+                    <div className="route-card">
+                      <div>
+                        <span className="route-label">Cabai Besar</span>
+                        <strong>Bermani Ulu ke Palembang</strong>
+                      </div>
+                      <span className="badge badge-warning">64% siap</span>
+                    </div>
+                    <div className="route-card">
+                      <div>
+                        <span className="route-label">Terung</span>
+                        <strong>Curup Tengah ke Kepahiang</strong>
+                      </div>
+                      <span className="badge badge-danger">38% kritis</span>
+                    </div>
+                    <div className="route-card">
+                      <div>
+                        <span className="route-label">Kembang Kol</span>
+                        <strong>Curup Timur ke Bengkulu Kota</strong>
+                      </div>
+                      <span className="badge badge-success">88% siap</span>
+                    </div>
+                    <div className="route-card">
+                      <div>
+                        <span className="route-label">Wortel</span>
+                        <strong>Sindang Kelangi ke Lebong</strong>
+                      </div>
+                      <span className="badge badge-success">76% siap</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Logistics Node Map */}
               <div className="node-map-panel">
                 <div className="panel-header">
-                  <span className="panel-title">Logical Node Map (Diagram Topologi Koridor Sumatra - Jawa)</span>
+                  <span className="panel-title">Logical Node Map (Diagram Topologi Koridor Sumatra – Jawa)</span>
                   <span className="text-muted" style={{ fontSize: '12px' }}>Garis animasi mewakili truk logistik backhaul aktif berjalan</span>
                 </div>
 
                 <div className="node-map-svg-container">
                   <svg width="100%" height="100%" viewBox="0 0 800 350">
-                    {/* Background grid dots */}
                     <defs>
                       <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
                         <circle cx="2" cy="2" r="1" fill="#1e293b" />
@@ -870,44 +1040,103 @@ function AdminDashboard({ user, onLogout }) {
                     </defs>
                     <rect width="100%" height="100%" fill="url(#grid)" />
 
-                    {/* Nodes Connector Lines */}
-                    {/* Rejang Lebong to Bengkulu */}
                     <line x1="200" y1="180" x2="100" y2="280" stroke="#00ff66" strokeWidth="2" className="active-edge cargo-glow" />
-                    {/* Rejang Lebong to Palembang */}
                     <line x1="200" y1="180" x2="350" y2="100" stroke="#00ff66" strokeWidth="2" className="active-edge cargo-glow" />
-                    {/* Palembang to Lampung */}
                     <line x1="350" y1="100" x2="500" y2="180" stroke="#475569" strokeWidth="2" />
-                    {/* Lampung to Jakarta */}
                     <line x1="500" y1="180" x2="680" y2="220" stroke="#00ff66" strokeWidth="2" className="active-edge cargo-glow" />
-                    {/* Rejang Lebong to Lampung */}
                     <line x1="200" y1="180" x2="500" y2="180" stroke="#475569" strokeWidth="2" />
 
-                    {/* Nodes Circle Details */}
-                    {/* Consumer Node: Kota Bengkulu */}
                     <circle cx="100" cy="280" r="14" fill="#ef4444" stroke="#fca5a5" strokeWidth="3" />
                     <text x="100" y="315" textAnchor="middle" className="node-label">Kota Bengkulu</text>
                     <text x="100" y="284" textAnchor="middle" className="node-title-label">KB</text>
 
-                    {/* Main Supply Node: Rejang Lebong */}
                     <circle cx="200" cy="180" r="22" fill="#008744" stroke="#86efac" strokeWidth="4" />
                     <text x="200" y="225" textAnchor="middle" className="node-label" style={{ fill: '#4ade80', fontWeight: 'bold' }}>Rejang Lebong (STA)</text>
                     <text x="200" y="184" textAnchor="middle" className="node-title-label">RL</text>
 
-                    {/* Intermediate Consumer Node: Palembang */}
                     <circle cx="350" cy="100" r="14" fill="#3b82f6" stroke="#93c5fd" strokeWidth="3" />
                     <text x="350" y="135" textAnchor="middle" className="node-label">Palembang</text>
                     <text x="350" y="104" textAnchor="middle" className="node-title-label">PL</text>
 
-                    {/* Transit Node: Lampung */}
                     <circle cx="500" cy="180" r="14" fill="#64748b" stroke="#cbd5e1" strokeWidth="3" />
                     <text x="500" y="215" textAnchor="middle" className="node-label">Lampung</text>
                     <text x="500" y="184" textAnchor="middle" className="node-title-label">LP</text>
 
-                    {/* Major Consumer Node: Jakarta */}
                     <circle cx="680" cy="220" r="18" fill="#ef4444" stroke="#fca5a5" strokeWidth="3" />
                     <text x="680" y="260" textAnchor="middle" className="node-label">DKI Jakarta</text>
                     <text x="680" y="224" textAnchor="middle" className="node-title-label">JKT</text>
                   </svg>
+                </div>
+              </div>
+
+              {/* Volume Distribution Table */}
+              <div className="dashboard-details-grid" style={{ gridTemplateColumns: '1fr' }}>
+                <div className="dashboard-panel">
+                  <div className="panel-header">
+                    <span className="panel-title">Detail Volume Distribusi per Rute</span>
+                  </div>
+                  <div className="dense-table-wrapper">
+                    <table className="dense-table">
+                      <thead>
+                        <tr>
+                          <th>Asal</th>
+                          <th>Tujuan</th>
+                          <th>Komoditas</th>
+                          <th>Tonase</th>
+                          <th>Waktu Tempuh</th>
+                          <th>Efisiensi</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td style={{ fontWeight: 600 }}>Rejang Lebong</td>
+                          <td>Palembang</td>
+                          <td>Cabai Besar</td>
+                          <td>120 Ton</td>
+                          <td>6 Jam</td>
+                          <td style={{ color: '#16a34a', fontWeight: 'bold' }}>94%</td>
+                          <td><span className="badge badge-success">Optimal</span></td>
+                        </tr>
+                        <tr>
+                          <td style={{ fontWeight: 600 }}>Rejang Lebong</td>
+                          <td>DKI Jakarta</td>
+                          <td>Terung</td>
+                          <td>350 Ton</td>
+                          <td>18 Jam</td>
+                          <td style={{ color: '#16a34a', fontWeight: 'bold' }}>88%</td>
+                          <td><span className="badge badge-success">Optimal</span></td>
+                        </tr>
+                        <tr>
+                          <td style={{ fontWeight: 600 }}>Selupu Rejang</td>
+                          <td>Kota Bengkulu</td>
+                          <td>Kubis</td>
+                          <td>85 Ton</td>
+                          <td>3 Jam</td>
+                          <td style={{ color: '#16a34a', fontWeight: 'bold' }}>92%</td>
+                          <td><span className="badge badge-success">Optimal</span></td>
+                        </tr>
+                        <tr>
+                          <td style={{ fontWeight: 600 }}>Kepahiang</td>
+                          <td>Bengkulu Kota</td>
+                          <td>Kembang Kol</td>
+                          <td>45 Ton</td>
+                          <td>2.5 Jam</td>
+                          <td style={{ color: '#f59e0b', fontWeight: 'bold' }}>72%</td>
+                          <td><span className="badge badge-warning">Menengah</span></td>
+                        </tr>
+                        <tr>
+                          <td style={{ fontWeight: 600 }}>Curup Tengah</td>
+                          <td>Kepahiang</td>
+                          <td>Terung</td>
+                          <td>28 Ton</td>
+                          <td>1.5 Jam</td>
+                          <td style={{ color: '#ef4444', fontWeight: 'bold' }}>38%</td>
+                          <td><span className="badge badge-danger">Kritis</span></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
@@ -915,81 +1144,7 @@ function AdminDashboard({ user, onLogout }) {
 
           {/* SECTION 7: Impact & SDG Evaluation Dashboard */}
           {activeTab === 'evaluation' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {/* Hero Metric Banner */}
-              <div className="hero-impact-banner">
-                <div className="hero-impact-grid">
-                  <div className="hero-impact-item">
-                    <div className="hero-impact-num">520 Ton</div>
-                    <div className="hero-impact-label">Food Loss Prevented</div>
-                    <div className="hero-impact-desc">Melalui efisiensi rantai distribusi logistik hortikultura (SDG 12.3)</div>
-                  </div>
-
-                  <div className="hero-impact-item">
-                    <div className="hero-impact-num">Rp 2.09 Miliar</div>
-                    <div className="hero-impact-label">Nilai Ekonomi Diselamatkan</div>
-                    <div className="hero-impact-desc">Kerugian pasca-panen petani Rejang Lebong berhasil direduksi</div>
-                  </div>
-
-                  <div className="hero-impact-item">
-                    <div className="hero-impact-num">Min. 55%</div>
-                    <div className="hero-impact-label">Price Share Petani Kecil</div>
-                    <div className="hero-impact-desc">Peningkatan pendapatan langsung bagi petani produsen (SDG 2.3)</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Annual Comparison Chart with Purple and Cyan color styles */}
-              <div className="dashboard-details-grid" style={{ gridTemplateColumns: '1fr' }}>
-                <div className="dashboard-panel">
-                  <div className="panel-header">
-                    <span className="panel-title">Perbandingan Volume Distribusi Tahunan (Ribuan Ton)</span>
-                    <div className="chart-legends">
-                      <div className="legend-item">
-                        <div className="legend-color" style={{ backgroundColor: '#8b5cf6' }}></div>
-                        <span>Distribusi Terkontrol (PanganDali)</span>
-                      </div>
-                      <div className="legend-item">
-                        <div className="legend-color" style={{ backgroundColor: '#06b6d4' }}></div>
-                        <span>Distribusi Non-Kontrol (Konvensional)</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* SVG Bar Chart with Purple & Cyan overrides */}
-                  <div className="chart-container" style={{ height: '260px' }}>
-                    <svg viewBox="0 0 600 240" width="100%" height="100%" preserveAspectRatio="none">
-                      {/* Grid Y Lines */}
-                      <line x1="0" y1="40" x2="600" y2="40" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="100" x2="600" y2="100" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="160" x2="600" y2="160" stroke="#f1f5f9" strokeWidth="1" />
-                      <line x1="0" y1="210" x2="600" y2="210" stroke="#cbd5e1" strokeWidth="2" />
-
-                      {/* Bar Group 2024 */}
-                      {/* PanganDali (Purple) */}
-                      <rect x="70" y="80" width="35" height="130" rx="4" fill="#8b5cf6" />
-                      {/* Konvensional (Cyan) */}
-                      <rect x="110" y="110" width="35" height="100" rx="4" fill="#06b6d4" />
-                      <text x="107" y="230" textAnchor="middle" fill="#64748b" style={{ fontSize: '11px', fontWeight: 'bold' }}>Tahun 2024</text>
-
-                      {/* Bar Group 2025 */}
-                      {/* PanganDali (Purple) */}
-                      <rect x="250" y="50" width="35" height="160" rx="4" fill="#8b5cf6" />
-                      {/* Konvensional (Cyan) */}
-                      <rect x="290" y="120" width="35" height="90" rx="4" fill="#06b6d4" />
-                      <text x="287" y="230" textAnchor="middle" fill="#64748b" style={{ fontSize: '11px', fontWeight: 'bold' }}>Tahun 2025</text>
-
-                      {/* Bar Group 2026 (Proyeksi) */}
-                      {/* PanganDali (Purple) */}
-                      <rect x="430" y="30" width="35" height="180" rx="4" fill="#8b5cf6" />
-                      {/* Konvensional (Cyan) */}
-                      <rect x="470" y="130" width="35" height="80" rx="4" fill="#06b6d4" />
-                      <text x="467" y="230" textAnchor="middle" fill="#64748b" style={{ fontSize: '11px', fontWeight: 'bold' }}>Tahun 2026 (Proyeksi)</text>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ImpactDashboard />
           )}
 
           {/* SECTION 8: Account Verification View */}

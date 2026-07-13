@@ -153,7 +153,7 @@ const timeline = [
 ];
 
 const infoCards = [
-  { icon: <Search size={22} />, title: 'Komoditas Unggulan', value: 'Cabai, Bawang, Tomat, dll.', color: 'rgba(239,68,68,0.08)', iconColor: '#dc2626' },
+  { icon: <Search size={22} />, title: 'Komoditas Unggulan', value: 'Kubis, Terung, Wortel, Kembang Kol, Cabai Besar', color: 'rgba(239,68,68,0.08)', iconColor: '#dc2626' },
   { icon: <Package size={22} />, title: 'Kapasitas Suplai', value: 'Sesuai pesanan (Grosir)', color: 'rgba(34,197,94,0.08)', iconColor: '#16a34a' },
   { icon: <Route size={22} />, title: 'Area Layanan', value: 'Seluruh Provinsi', color: 'rgba(59,130,246,0.08)', iconColor: '#2563eb' },
 ];
