@@ -164,7 +164,7 @@ export default function ImpactDashboard() {
             </div>
             <div className="bi-exec-info">
               <span className="bi-exec-value">520<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>Ton</span></span>
-              <span className="bi-exec-label">Food Loss Prevented</span>
+              <span className="bi-exec-label">Food Loss Prevented (Estimasi)</span>
             </div>
           </motion.div>
 
@@ -174,7 +174,7 @@ export default function ImpactDashboard() {
             </div>
             <div className="bi-exec-info">
               <span className="bi-exec-value">2.09<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>Miliar</span></span>
-              <span className="bi-exec-label">Nilai Ekonomi Diselamatkan</span>
+              <span className="bi-exec-label">Nilai Ekonomi Diselamatkan (Estimasi)</span>
             </div>
           </motion.div>
 
@@ -255,8 +255,10 @@ export default function ImpactDashboard() {
         {/* KPI PERFORMANCE CARDS */}
         <h2 className="bi-section-title" style={{ marginTop: '32px' }}><Activity size={18} /> Key Performance Indicators</h2>
         <div className="bi-grid-4">
-          <KPICard title="Food Loss Prevented" value="520 Ton" icon={ShieldAlert} color="#16a34a" trend="up" trendVal="15%" sparkData={sparklineData} />
-          <KPICard title="Economic Value Saved" value="Rp 2.09 M" icon={DollarSign} color="#8b5cf6" trend="up" trendVal="22%" sparkData={sparklineData} />
+          {/* TODO: verifikasi angka ini terhadap tabel indikator proposal */}
+          <KPICard title="Food Loss (Estimasi)" value="520 Ton" icon={ShieldAlert} color="#16a34a" trend="up" trendVal="15%" sparkData={sparklineData} />
+          {/* TODO: verifikasi angka ini terhadap tabel indikator proposal */}
+          <KPICard title="Econ Value (Estimasi)" value="Rp 2.09 M" icon={DollarSign} color="#8b5cf6" trend="up" trendVal="22%" sparkData={sparklineData} />
           <KPICard title="Empty Backhaul Utilized" value="840 Trips" icon={Truck} color="#0ea5e9" trend="up" trendVal="12%" sparkData={sparklineData} />
           <KPICard title="Logistics Cost Saved" value="Rp 450 Jt" icon={TrendingUp} color="#f59e0b" trend="up" trendVal="8%" sparkData={sparklineData} />
           <KPICard title="Logistics Efficiency" value="78.5%" icon={Zap} color="#10b981" trend="up" trendVal="5%" sparkData={sparklineData} />
@@ -431,7 +433,7 @@ export default function ImpactDashboard() {
               <tbody>
                 <tr>
                   <td><strong>Rejang Lebong</strong></td>
-                  <td>Palembang</td>
+                  <td>Palembang (Rencana)</td>
                   <td>Cabai Besar</td>
                   <td>120 Ton</td>
                   <td>6 Jam</td>
@@ -440,7 +442,7 @@ export default function ImpactDashboard() {
                 </tr>
                 <tr>
                   <td><strong>Rejang Lebong</strong></td>
-                  <td>DKI Jakarta</td>
+                  <td>DKI Jakarta (Rencana)</td>
                   <td>Terung</td>
                   <td>350 Ton</td>
                   <td>18 Jam</td>

@@ -7,7 +7,7 @@ import {
 import ImpactDashboard from './dashboard/ImpactDashboard';
 import './AdminDashboard.css';
 
-function AdminDashboard({ user, onLogout }) {
+function AdminDashboard({ user, onLogout, isTPID }) {
   const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'ews', 'harvest', 'logistics', 'evaluation', 'verification'
   const [selectedRegion, setSelectedRegion] = useState('Rejang Lebong');
   const [selectedCommodity, setSelectedCommodity] = useState('Cabai Besar');
@@ -27,7 +27,7 @@ function AdminDashboard({ user, onLogout }) {
     return JSON.parse(localStorage.getItem('pangandali_verifications') || '[]');
   });
   const adminInitials = user?.name ? user.name.slice(0, 2).toUpperCase() : 'AD';
-  const adminDisplayName = user?.name || 'TPID Rejang Lebong';
+  const adminDisplayName = user?.name || 'Admin (Dinas Pertanian)';
   const adminRole = user?.role ? `${user.role} Pemerintah` : 'Admin Pemerintah';
 
   const handleApproveReport = (id) => {
@@ -57,14 +57,12 @@ function AdminDashboard({ user, onLogout }) {
   };
 
   const handleVerifyAccount = (email, type, newStatus, reason = '') => {
-    // Update global verifications list
     const updatedVerifications = verifications.map(v => 
       v.email === email ? { ...v, status: newStatus } : v
     );
     setVerifications(updatedVerifications);
     localStorage.setItem('pangandali_verifications', JSON.stringify(updatedVerifications));
 
-    // Update specific document
     const storageKey = type === 'Driver' ? `pangandali_driver_docs_${email}` : `pangandali_distributor_docs_${email}`;
     const docStr = localStorage.getItem(storageKey);
     if (docStr) {
@@ -75,7 +73,6 @@ function AdminDashboard({ user, onLogout }) {
     }
   };
 
-  // Dynamic Contextual Breadcrumb
   const renderBreadcrumbs = () => {
     switch (activeTab) {
       case 'overview':
@@ -143,7 +140,6 @@ function AdminDashboard({ user, onLogout }) {
 
   return (
     <div className="admin-layout">
-      {/* SECTION 1: Global Sidebar Navigation */}
       <aside className="admin-sidebar">
         <div className="admin-sidebar-logo">
           <div className="logo-icon">PD</div>
@@ -173,16 +169,39 @@ function AdminDashboard({ user, onLogout }) {
             <span className="menu-badge">3</span>
           </button>
 
-          <button 
-            className={`sidebar-item ${activeTab === 'harvest' ? 'active' : ''}`}
-            onClick={() => setActiveTab('harvest')}
-          >
-            <div className="sidebar-item-content">
-              <MessageSquare size={18} />
-              <span>Harvest Reports (NLP)</span>
-            </div>
-          </button>
+          {!isTPID && (
+            <>
+              <button 
+                className={`sidebar-item ${activeTab === 'harvest' ? 'active' : ''}`}
+                onClick={() => setActiveTab('harvest')}
+              >
+                <div className="sidebar-item-content">
+                  <MessageSquare size={18} />
+                  <span>Harvest Reports (NLP)</span>
+                </div>
+              </button>
 
+              <button 
+                className={`sidebar-item ${activeTab === 'evaluation' ? 'active' : ''}`}
+                onClick={() => setActiveTab('evaluation')}
+              >
+                <div className="sidebar-item-content">
+                  <BarChart3 size={18} />
+                  <span>Impact Evaluation</span>
+                </div>
+              </button>
+
+              <button 
+                className={`sidebar-item ${activeTab === 'verification' ? 'active' : ''}`}
+                onClick={() => setActiveTab('verification')}
+              >
+                <div className="sidebar-item-content">
+                  <UserCheck size={18} />
+                  <span>Verifikasi Akun</span>
+                </div>
+              </button>
+            </>
+          )}
 
           <button 
             className={`sidebar-item ${activeTab === 'map' ? 'active' : ''}`}
@@ -193,37 +212,21 @@ function AdminDashboard({ user, onLogout }) {
               <span>Distribution Map</span>
             </div>
           </button>
-
-          <button 
-            className={`sidebar-item ${activeTab === 'evaluation' ? 'active' : ''}`}
-            onClick={() => setActiveTab('evaluation')}
-          >
-            <div className="sidebar-item-content">
-              <BarChart3 size={18} />
-              <span>Impact Evaluation</span>
-            </div>
-          </button>
-
-          <button 
-            className={`sidebar-item ${activeTab === 'verification' ? 'active' : ''}`}
-            onClick={() => setActiveTab('verification')}
-          >
-            <div className="sidebar-item-content">
-              <UserCheck size={18} />
-              <span>Verifikasi Akun</span>
-            </div>
-          </button>
         </nav>
 
-        <div className="sidebar-heading">Quick Actions</div>
-        <nav className="sidebar-menu">
-          <button className="sidebar-item" onClick={() => alert('Fitur Ekspor Satu Data Indonesia diaktifkan!')}>
-            <div className="sidebar-item-content">
-              <Compass size={18} />
-              <span>Ekspor Data SDI</span>
-            </div>
-          </button>
-        </nav>
+        {!isTPID && (
+          <>
+            <div className="sidebar-heading">Quick Actions</div>
+            <nav className="sidebar-menu">
+              <button className="sidebar-item" onClick={() => alert('Fitur Ekspor Satu Data Indonesia diaktifkan!')}>
+                <div className="sidebar-item-content">
+                  <Compass size={18} />
+                  <span>Ekspor Data SDI</span>
+                </div>
+              </button>
+            </nav>
+          </>
+        )}
 
         <div className="sidebar-footer">
           <div className="admin-profile-card">
@@ -529,7 +532,7 @@ function AdminDashboard({ user, onLogout }) {
                     <span className="metric-title">Food Loss Prevented</span>
                     <div className="metric-icon-box"><ShieldAlert size={16} /></div>
                   </div>
-                  <div className="metric-value">520 Ton</div>
+                  <div className="metric-value">520 Ton <span style={{fontSize:'12px', fontWeight:'normal', color:'#64748b'}}>(Estimasi)</span></div>
                   <div className="metric-footer">
                     <span className="badge badge-success">↑ 18%</span>
                     <span>dari tahun lalu</span>
@@ -953,7 +956,7 @@ function AdminDashboard({ user, onLogout }) {
               <div className="distribution-map-grid">
                 <div className="distribution-map-panel">
                   <div className="panel-header">
-                    <span className="panel-title">Distribution Map Koridor Rejang Lebong</span>
+                    <span className="panel-title">Distribution Map Koridor Rejang Lebong - Bengkulu (Pilot)</span>
                     <span className="badge badge-info">Sinkron SDI 09:45 WIB</span>
                   </div>
 
@@ -970,8 +973,8 @@ function AdminDashboard({ user, onLogout }) {
                       <span className="map-pin-label">Kota Bengkulu</span>
                       <strong>-4.8 Ton Kubis</strong>
                     </div>
-                    <div className="map-region deficit region-palembang">
-                      <span className="map-pin-label">Palembang</span>
+                    <div className="map-region deficit region-palembang" style={{ opacity: 0.6 }}>
+                      <span className="map-pin-label">Palembang (Rencana)</span>
                       <strong>-2.1 Ton Cabai</strong>
                     </div>
                     <div className="map-route route-main"></div>
@@ -1041,10 +1044,10 @@ function AdminDashboard({ user, onLogout }) {
                     <rect width="100%" height="100%" fill="url(#grid)" />
 
                     <line x1="200" y1="180" x2="100" y2="280" stroke="#00ff66" strokeWidth="2" className="active-edge cargo-glow" />
-                    <line x1="200" y1="180" x2="350" y2="100" stroke="#00ff66" strokeWidth="2" className="active-edge cargo-glow" />
-                    <line x1="350" y1="100" x2="500" y2="180" stroke="#475569" strokeWidth="2" />
-                    <line x1="500" y1="180" x2="680" y2="220" stroke="#00ff66" strokeWidth="2" className="active-edge cargo-glow" />
-                    <line x1="200" y1="180" x2="500" y2="180" stroke="#475569" strokeWidth="2" />
+                    <line x1="200" y1="180" x2="350" y2="100" stroke="#475569" strokeWidth="2" strokeDasharray="5,5" />
+                    <line x1="350" y1="100" x2="500" y2="180" stroke="#475569" strokeWidth="2" strokeDasharray="5,5" />
+                    <line x1="500" y1="180" x2="680" y2="220" stroke="#475569" strokeWidth="2" strokeDasharray="5,5" />
+                    <line x1="200" y1="180" x2="500" y2="180" stroke="#475569" strokeWidth="2" strokeDasharray="5,5" />
 
                     <circle cx="100" cy="280" r="14" fill="#ef4444" stroke="#fca5a5" strokeWidth="3" />
                     <text x="100" y="315" textAnchor="middle" className="node-label">Kota Bengkulu</text>
@@ -1054,16 +1057,16 @@ function AdminDashboard({ user, onLogout }) {
                     <text x="200" y="225" textAnchor="middle" className="node-label" style={{ fill: '#4ade80', fontWeight: 'bold' }}>Rejang Lebong (STA)</text>
                     <text x="200" y="184" textAnchor="middle" className="node-title-label">RL</text>
 
-                    <circle cx="350" cy="100" r="14" fill="#3b82f6" stroke="#93c5fd" strokeWidth="3" />
-                    <text x="350" y="135" textAnchor="middle" className="node-label">Palembang</text>
+                    <circle cx="350" cy="100" r="14" fill="#3b82f6" stroke="#93c5fd" strokeWidth="3" opacity="0.6" />
+                    <text x="350" y="135" textAnchor="middle" className="node-label">Palembang (Rencana)</text>
                     <text x="350" y="104" textAnchor="middle" className="node-title-label">PL</text>
 
-                    <circle cx="500" cy="180" r="14" fill="#64748b" stroke="#cbd5e1" strokeWidth="3" />
-                    <text x="500" y="215" textAnchor="middle" className="node-label">Lampung</text>
+                    <circle cx="500" cy="180" r="14" fill="#64748b" stroke="#cbd5e1" strokeWidth="3" opacity="0.6" />
+                    <text x="500" y="215" textAnchor="middle" className="node-label">Lampung (Rencana)</text>
                     <text x="500" y="184" textAnchor="middle" className="node-title-label">LP</text>
 
-                    <circle cx="680" cy="220" r="18" fill="#ef4444" stroke="#fca5a5" strokeWidth="3" />
-                    <text x="680" y="260" textAnchor="middle" className="node-label">DKI Jakarta</text>
+                    <circle cx="680" cy="220" r="18" fill="#ef4444" stroke="#fca5a5" strokeWidth="3" opacity="0.6" />
+                    <text x="680" y="260" textAnchor="middle" className="node-label">DKI Jakarta (Rencana)</text>
                     <text x="680" y="224" textAnchor="middle" className="node-title-label">JKT</text>
                   </svg>
                 </div>
@@ -1091,7 +1094,7 @@ function AdminDashboard({ user, onLogout }) {
                       <tbody>
                         <tr>
                           <td style={{ fontWeight: 600 }}>Rejang Lebong</td>
-                          <td>Palembang</td>
+                          <td>Palembang (Rencana)</td>
                           <td>Cabai Besar</td>
                           <td>120 Ton</td>
                           <td>6 Jam</td>
@@ -1100,7 +1103,7 @@ function AdminDashboard({ user, onLogout }) {
                         </tr>
                         <tr>
                           <td style={{ fontWeight: 600 }}>Rejang Lebong</td>
-                          <td>DKI Jakarta</td>
+                          <td>DKI Jakarta (Rencana)</td>
                           <td>Terung</td>
                           <td>350 Ton</td>
                           <td>18 Jam</td>

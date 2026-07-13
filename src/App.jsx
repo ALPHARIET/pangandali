@@ -147,9 +147,10 @@ function App() {
     return <DistributorHome user={distributorUser} onLogout={handleDistributorLogout} />;
   }
 
-  // ─── ADMIN FLOW ───
-  if (user && user.role === 'Admin') {
-    return <AdminDashboard user={user} onLogout={handleLogout} />;
+  // ─── ADMIN & TPID FLOW ───
+  if (user && (user.role === 'Admin' || user.role === 'TPID')) {
+    const isTPID = user.role === 'TPID';
+    return <AdminDashboard user={user} onLogout={handleLogout} isTPID={isTPID} />;
   }
 
   // ─── DEFAULT LANDING PAGE ───

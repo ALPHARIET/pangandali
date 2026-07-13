@@ -199,7 +199,7 @@ function DistributorVerification({ user, onLogout, onStatusChange }) {
       icon: Clock,
       iconClass: 'pending',
       title: 'Menunggu Verifikasi',
-      desc: 'Dokumen distributor Anda telah dikirim dan sedang menunggu proses verifikasi oleh tim TPID. Proses ini biasanya memakan waktu 1-2 hari kerja.',
+      desc: 'Dokumen distributor Anda telah dikirim dan sedang menunggu proses verifikasi oleh tim Admin. Proses ini biasanya memakan waktu maksimal 1x24 jam kerja.',
       badgeText: '⏳ Menunggu Verifikasi',
     },
     reviewing: {

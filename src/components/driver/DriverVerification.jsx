@@ -203,7 +203,7 @@ function DriverVerification({ user, onLogout, onStatusChange }) {
       icon: Clock,
       iconClass: 'pending',
       title: 'Menunggu Verifikasi',
-      desc: 'Dokumen Anda berhasil dikirim dan sedang menunggu proses verifikasi oleh tim kami. Proses ini biasanya memakan waktu 1-2 hari kerja.',
+      desc: 'Dokumen Anda berhasil dikirim dan sedang menunggu proses verifikasi oleh tim kami. Proses ini biasanya memakan waktu maksimal 1x24 jam kerja.',
       badgeText: '⏳ Menunggu Verifikasi',
     },
     reviewing: {

@@ -11,7 +11,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   // Signup fields
   const [signupName, setSignupName] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
-  const [signupRole, setSignupRole] = useState('Petani');
+  const [signupRole, setSignupRole] = useState('Distributor');
   const [signupPassword, setSignupPassword] = useState('');
   const [signupConfirmPassword, setSignupConfirmPassword] = useState('');
   
@@ -29,7 +29,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
       setLoginPassword('');
       setSignupName('');
       setSignupEmail('');
-      setSignupRole('Petani');
+      setSignupRole('Distributor');
       setSignupPassword('');
       setSignupConfirmPassword('');
     }
@@ -55,7 +55,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
     // Support admin credentials
     if (loginIdentifier.toLowerCase() === 'admin' && loginPassword === 'admin') {
       foundUser = {
-        name: 'Admin TPID Rejang Lebong',
+        name: 'Admin (Dinas Pertanian)',
         email: 'admin@pangandali.id',
         password: 'admin',
         role: 'Admin'
@@ -287,6 +287,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
 
             <div className="login-hint" style={{ fontSize: '11px', textAlign: 'center' }}>
               <strong>Admin:</strong> admin / admin<br/>
+              <strong>TPID:</strong> budi@pangandali.id / password123<br/>
               <strong>Driver:</strong> driver / driver123<br/>
               <strong>Distributor:</strong> distributor / distributor123
             </div>
@@ -341,12 +342,14 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
                   value={signupRole}
                   onChange={(e) => setSignupRole(e.target.value)}
                 >
-                  <option value="Petani">Petani</option>
                   <option value="Distributor">Distributor</option>
                   <option value="Mitra Logistik">Mitra Logistik/Driver</option>
-                  <option value="TPID">TPID (Pemerintah)</option>
                 </select>
               </div>
+            </div>
+
+            <div className="alert-message alert-info" style={{ marginTop: '12px', fontSize: '12px', background: '#eff6ff', color: '#1e40af', padding: '10px', borderRadius: '6px' }}>
+              <strong>Info:</strong> Akun Petani dan instansi TPID didaftarkan secara kolektif melalui PPL, Gapoktan, atau BUMDes (tidak melalui pendaftaran mandiri).
             </div>
 
             <div className="form-group">

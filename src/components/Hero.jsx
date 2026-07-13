@@ -7,8 +7,8 @@ function Hero({ onCTA }) {
       {/* Full-width background image */}
       <div className="hero-bg">
         <img 
-          src="/rice_fields_hero.png" 
-          alt="Lanskap pertanian sawah PanganDali" 
+          src="/horticulture_hero.png" 
+          alt="Lanskap pertanian hortikultura PanganDali" 
           className="hero-bg-img" 
         />
         <div className="hero-bg-overlay" />
