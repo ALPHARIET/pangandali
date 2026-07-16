@@ -79,7 +79,7 @@ function DriverLogin({ onLoginSuccess }) {
           Masuk ke akun <em>Driver</em> Anda
         </h1>
         <p className="driver-login__sub">
-          Gunakan akun yang telah didaftarkan oleh admin untuk mengakses layanan Backhaul.
+          Gunakan akun yang telah Anda daftarkan melalui sistem, atau akun demo untuk mencoba layanan Backhaul. Akun baru akan diverifikasi oleh admin sebelum dapat beroperasi.
         </p>
 
         {error && (
@@ -193,10 +193,10 @@ function DriverLogin({ onLoginSuccess }) {
             Jangan biarkan truk Anda pulang kosong. Dapatkan muatan balik dan tambah penghasilan setiap perjalanan.
           </p>
 
-          <div className="driver-login__illust-stats">
+            <div className="driver-login__illust-stats">
             <div className="driver-login__illust-stat">
-              <div className="driver-login__illust-stat-num">500+</div>
-              <div className="driver-login__illust-stat-label">Driver Aktif</div>
+              <div className="driver-login__illust-stat-num">30+</div>
+              <div className="driver-login__illust-stat-label">Driver Terdaftar (Pilot)</div>
             </div>
             <div className="driver-login__illust-stat">
               <div className="driver-login__illust-stat-num">60%</div>

@@ -12,6 +12,9 @@ function Footer() {
           <p className="footer-desc">
             Platform distribusi pangan yang transparan dan responsif.
           </p>
+          <p style={{ fontSize: '11px', color: '#94a3b8', marginTop: '8px', padding: '6px 12px', background: 'rgba(99,102,241,0.1)', borderRadius: '6px', display: 'inline-block', border: '1px solid rgba(99,102,241,0.2)' }}>
+            ⚠️ Prototype / Mockup — Frontend React + Vite dengan localStorage. Arsitektur proposal: FastAPI + PostgreSQL.
+          </p>
           <p className="footer-copy">
             © {year} PanganDali. Dibangun dengan <Heart size={12} className="footer-heart" /> untuk Indonesia.
           </p>

@@ -18,10 +18,10 @@ function AdminDashboard({ user, onLogout, isTPID }) {
   ]);
   const [nlpReports, setNlpReports] = useState([
     { id: 1, wa: '+62 812-****-3392', raw: 'lapor panen cabai besar 350 kg di kelurahan selupu rejang harga jual 22 ribu rupiah', crop: 'Cabai Besar', qty: '350 Kg', loc: 'Selupu Rejang', status: 'Terverifikasi otomatis', autoCheck: 'Profil petani sesuai', anomaly: false, evidence: 'Foto terkirim', reviewQueue: 'Tidak', time: '10 Mins Ago' },
-    { id: 2, wa: '+62 853-****-9121', raw: 'panen kubis 1.2 ton daerah bermani ulu siap angkut harga nego tipis', crop: 'Kubis', qty: '1,200 Kg', loc: 'Bermani Ulu', status: 'Anomali - review', autoCheck: 'Pola pelaporan tidak wajar', anomaly: true, evidence: 'Foto belum dikirim', reviewQueue: 'Ya', time: '34 Mins Ago' },
-    { id: 3, wa: '+62 813-****-5541', raw: 'panen raya kembang kol melimpah 800 kilo harga petani 4000 saja per kilo curup timur', crop: 'Kembang Kol', qty: '800 Kg', loc: 'Curup Timur', status: 'Terverifikasi otomatis', autoCheck: 'Profil petani sesuai', anomaly: false, evidence: 'Foto terkirim', reviewQueue: 'Tidak', time: '1 Hour Ago' },
+    { id: 2, wa: '+62 853-****-9121', raw: 'panen kubis 1.2 ton daerah air putih lama selupu rejang siap angkut harga nego tipis', crop: 'Kubis', qty: '1,200 Kg', loc: 'Air Putih Lama, Selupu Rejang', status: 'Anomali - review', autoCheck: 'Pola pelaporan tidak wajar', anomaly: true, evidence: 'Foto belum dikirim', reviewQueue: 'Ya', time: '34 Mins Ago' },
+    { id: 3, wa: '+62 813-****-5541', raw: 'panen raya kembang kol melimpah 800 kilo harga petani 4000 saja per kilo desa lubuk ubar selupu rejang', crop: 'Kembang Kol', qty: '800 Kg', loc: 'Lubuk Ubar, Selupu Rejang', status: 'Terverifikasi otomatis', autoCheck: 'Profil petani sesuai', anomaly: false, evidence: 'Foto terkirim', reviewQueue: 'Tidak', time: '1 Hour Ago' },
     { id: 4, wa: '+62 878-****-1004', raw: 'harga terung melonjak drastis di pasar atas curup mencapai 45 ribu per kilo pasokan tipis', crop: 'Terung', qty: 'N/A (Pantauan)', loc: 'Pasar Atas Curup', status: 'Anomali - review', autoCheck: 'Lonjakan ekstrem vs historis', anomaly: true, evidence: 'Foto belum dikirim', reviewQueue: 'Ya', time: '3 Hours Ago' },
-    { id: 5, wa: '+62 821-****-8842', raw: 'lapor wortel bersih 500kg sindang kelangi siap didistribusikan harga 6rb', crop: 'Wortel', qty: '500 Kg', loc: 'Sindang Kelangi', status: 'Terverifikasi otomatis', autoCheck: 'Profil petani sesuai', anomaly: false, evidence: 'Foto terkirim', reviewQueue: 'Tidak', time: '1 Day Ago' }
+    { id: 5, wa: '+62 821-****-8842', raw: 'lapor wortel bersih 500kg kampung baru selupu rejang siap didistribusikan harga 6rb', crop: 'Wortel', qty: '500 Kg', loc: 'Kampung Baru, Selupu Rejang', status: 'Terverifikasi otomatis', autoCheck: 'Profil petani sesuai', anomaly: false, evidence: 'Foto terkirim', reviewQueue: 'Tidak', time: '1 Day Ago' }
   ]);
   const [verifications, setVerifications] = useState(() => {
     return JSON.parse(localStorage.getItem('pangandali_verifications') || '[]');
@@ -588,10 +588,10 @@ function AdminDashboard({ user, onLogout, isTPID }) {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     {[
                       { time: '10 menit lalu', text: 'Laporan panen cabai besar 350 kg diterima dari Selupu Rejang', type: 'success' },
-                      { time: '34 menit lalu', text: 'Anomali terdeteksi pada laporan kubis 1.2 ton dari Bermani Ulu', type: 'warning' },
-                      { time: '1 jam lalu', text: 'Panen kembang kol 800 kg dari Curup Timur terverifikasi otomatis', type: 'success' },
+                      { time: '34 menit lalu', text: 'Anomali terdeteksi pada laporan kubis 1.2 ton dari Air Putih Lama, Selupu Rejang', type: 'warning' },
+                      { time: '1 jam lalu', text: 'Panen kembang kol 800 kg dari Lubuk Ubar, Selupu Rejang terverifikasi otomatis', type: 'success' },
                       { time: '3 jam lalu', text: 'Harga terung melonjak 35% di Pasar Atas Curup', type: 'danger' },
-                      { time: '1 hari lalu', text: 'Wortel 500 kg dari Sindang Kelangi siap didistribusikan', type: 'success' },
+                      { time: '1 hari lalu', text: 'Wortel 500 kg dari Kampung Baru, Selupu Rejang siap didistribusikan', type: 'success' },
                     ].map((act, i) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '10px 0', borderBottom: '1px solid #f1f5f9' }}>
                         <div style={{ width: '8px', height: '8px', borderRadius: '50%', marginTop: '6px', flexShrink: 0, backgroundColor: act.type === 'success' ? '#16a34a' : act.type === 'warning' ? '#f59e0b' : '#ef4444' }}></div>
@@ -912,7 +912,7 @@ function AdminDashboard({ user, onLogout, isTPID }) {
                     <span className="metric-title">Rute Aktif</span>
                     <div className="metric-icon-box"><Map size={16} /></div>
                   </div>
-                  <div className="metric-value">24 Rute</div>
+                  <div className="metric-value">4 Rute</div>
                   <div className="metric-footer">
                     <span className="badge badge-success">+3</span>
                     <span>rute baru bulan ini</span>
@@ -923,7 +923,7 @@ function AdminDashboard({ user, onLogout, isTPID }) {
                     <span className="metric-title">Total Volume</span>
                     <div className="metric-icon-box"><TrendingUp size={16} /></div>
                   </div>
-                  <div className="metric-value">4,250 Ton</div>
+                  <div className="metric-value">85 Ton</div>
                   <div className="metric-footer">
                     <span className="badge badge-success">↑ 12%</span>
                     <span>dari bulan lalu</span>
@@ -934,7 +934,7 @@ function AdminDashboard({ user, onLogout, isTPID }) {
                     <span className="metric-title">Waktu Tempuh Rata-rata</span>
                     <div className="metric-icon-box"><CheckCircle size={16} /></div>
                   </div>
-                  <div className="metric-value">18 Jam</div>
+                  <div className="metric-value">3 Jam</div>
                   <div className="metric-footer">
                     <span className="badge badge-success">↓ 4 Jam</span>
                     <span>lebih cepat</span>
@@ -1019,7 +1019,7 @@ function AdminDashboard({ user, onLogout, isTPID }) {
                     <div className="route-card">
                       <div>
                         <span className="route-label">Wortel</span>
-                        <strong>Sindang Kelangi ke Lebong</strong>
+                        <strong>Selupu Rejang ke Kota Bengkulu</strong>
                       </div>
                       <span className="badge badge-success">76% siap</span>
                     </div>

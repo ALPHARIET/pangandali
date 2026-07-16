@@ -115,8 +115,9 @@ const timeline = [
   { num: 1, title: 'Ajukan Permintaan', desc: 'Pilih komoditas dari stok tervalidasi dan ajukan volume.', color: '#3b82f6' },
   { num: 2, title: 'Reserve Volume', desc: 'Sistem me-reserve stok otomatis untuk pesanan Anda.', color: '#22c55e' },
   { num: 3, title: 'PO Digital & Invoice', desc: 'Dapatkan dokumen PO dan Invoice resmi dari sistem.', color: '#f59e0b' },
-  { num: 4, title: 'Pembayaran', desc: 'Unggah bukti transfer dan tunggu verifikasi Admin.', color: '#6366f1' },
-  { num: 5, title: 'Pengiriman', desc: 'Komoditas dikirim via armada backhaul setelah diverifikasi.', color: '#10b981' },
+  { num: 4, title: 'Pembayaran', desc: 'Unggah bukti transfer pembayaran ke rekening petani.', color: '#6366f1' },
+  { num: 5, title: 'Konfirmasi Petani', desc: 'Petani mengonfirmasi penerimaan dana via chatbot WhatsApp. Admin berperan sebagai fallback jika petani tidak merespons.', color: '#ec4899' },
+  { num: 6, title: 'Pengiriman', desc: 'Komoditas dikirim via armada backhaul setelah transaksi lunas.', color: '#10b981' },
 ];
 
 const infoCards = [
@@ -140,7 +141,7 @@ function DistributorHome({ user, onLogout }) {
   // Transaction States
   const [selectedStock, setSelectedStock] = useState('');
   const [requestVol, setRequestVol] = useState('');
-  const [transactionState, setTransactionState] = useState('idle'); // idle, reserved, po, invoice, waiting_verify, verified
+  const [transactionState, setTransactionState] = useState('idle'); // idle, reserved, po, invoice, waiting_farmer, waiting_admin_fallback, verified
 
   const benefitsRef = useScrollReveal('.driver-benefit-card');
   const timelineRef = useScrollReveal('.driver-timeline__item');
@@ -163,10 +164,19 @@ function DistributorHome({ user, onLogout }) {
   };
 
   const handleUpload = () => {
-    setTransactionState('waiting_verify');
+    setTransactionState('waiting_farmer');
+    // Simulate farmer WhatsApp confirmation after delay
     setTimeout(() => {
       setTransactionState('verified');
-      alert("Pembayaran berhasil diverifikasi oleh Admin (Dinas Pertanian)!");
+      alert("Petani telah mengonfirmasi penerimaan dana via WhatsApp. Status transaksi: LUNAS.");
+    }, 3000);
+  };
+
+  const handleAdminFallback = () => {
+    setTransactionState('waiting_admin_fallback');
+    setTimeout(() => {
+      setTransactionState('verified');
+      alert("Admin (Dinas Pertanian) telah memverifikasi transaksi sebagai mekanisme cadangan (fallback). Status: LUNAS.");
     }, 2000);
   };
 
@@ -395,19 +405,31 @@ function DistributorHome({ user, onLogout }) {
                 </div>
               )}
 
-              {transactionState === 'waiting_verify' && (
+              {transactionState === 'waiting_farmer' && (
+                <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                  <Clock size={40} color="#ec4899" style={{ margin: '0 auto', display: 'block' }} />
+                  <h4 style={{ marginTop: '12px' }}>Menunggu Konfirmasi Petani via WhatsApp</h4>
+                  <p style={{ fontSize: '13px', color: '#64748b' }}>Bukti bayar berhasil diunggah. Sistem mengirimkan notifikasi ke petani melalui chatbot WhatsApp untuk mengonfirmasi penerimaan dana.</p>
+                  <div style={{ marginTop: '16px', padding: '12px', background: '#fdf4ff', borderRadius: '8px', border: '1px solid #f0abfc', fontSize: '12px', color: '#86198f' }}>
+                    <strong>Alur Proposal:</strong> Petani mengonfirmasi penerimaan dana → Status menjadi <em>Lunas</em>. Jika petani tidak merespons dalam batas waktu, admin dapat memverifikasi sebagai mekanisme cadangan (fallback).
+                  </div>
+                  <button className="btn btn-outline" style={{ marginTop: '12px', fontSize: '12px' }} onClick={handleAdminFallback}>Verifikasi Manual oleh Admin (Fallback)</button>
+                </div>
+              )}
+
+              {transactionState === 'waiting_admin_fallback' && (
                 <div style={{ marginTop: '20px', textAlign: 'center' }}>
                   <Clock size={40} color="#6366f1" style={{ margin: '0 auto', display: 'block' }} />
-                  <h4 style={{ marginTop: '12px' }}>Menunggu Verifikasi Admin</h4>
-                  <p style={{ fontSize: '13px', color: '#64748b' }}>Bukti bayar berhasil diunggah. Admin (Dinas Pertanian) sedang memverifikasi transaksi Anda.</p>
+                  <h4 style={{ marginTop: '12px' }}>Menunggu Verifikasi Admin (Fallback)</h4>
+                  <p style={{ fontSize: '13px', color: '#64748b' }}>Admin (Dinas Pertanian) sedang memverifikasi transaksi sebagai mekanisme cadangan karena petani belum merespons.</p>
                 </div>
               )}
 
               {transactionState === 'verified' && (
                 <div style={{ marginTop: '20px', textAlign: 'center' }}>
                   <CheckCircle size={48} color="#10b981" style={{ margin: '0 auto', display: 'block' }} />
-                  <h4 style={{ marginTop: '12px', color: '#10b981' }}>Pembayaran Terverifikasi!</h4>
-                  <p style={{ fontSize: '13px', color: '#64748b' }}>Armada logistik backhaul sedang disiapkan untuk pengiriman ke gudang Anda. Anda dapat melacak posisi via WhatsApp notifikasi.</p>
+                  <h4 style={{ marginTop: '12px', color: '#10b981' }}>Transaksi Lunas!</h4>
+                  <p style={{ fontSize: '13px', color: '#64748b' }}>Pembayaran telah dikonfirmasi. Armada logistik backhaul sedang disiapkan untuk pengiriman ke gudang Anda. Anda dapat melacak posisi via WhatsApp notifikasi.</p>
                   <button className="btn btn-outline" style={{ marginTop: '16px' }} onClick={() => { setTransactionState('idle'); setSelectedStock(''); setRequestVol(''); }}>Buat Pesanan Baru</button>
                 </div>
               )}
