@@ -49,9 +49,9 @@ function Tantangan() {
               <TrendingDown size={12} />
               <span>Margin Petani Rendah</span>
             </div>
-            <h3 className="tantangan-card-title">Rantai Pemasaran 4 Lapis</h3>
+            <h3 className="tantangan-card-title">Rantai Distribusi Panjang</h3>
             <p className="tantangan-card-desc">
-              Tengkulak berlapis menggerus margin petani dan melambungkan harga di tingkat konsumen. Transparansi harga hampir tidak ada.
+              Rantai pemasaran berlapis menggerus margin petani hingga farmer price share hanya 43% (Fitria, 2022). Transparansi harga hampir tidak ada.
             </p>
             <div className="tantangan-card-img">
               <img src="/market_trading.png" alt="Rantai Pemasaran berlapis" />

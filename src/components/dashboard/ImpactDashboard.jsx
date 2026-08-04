@@ -12,40 +12,40 @@ import {
 } from 'lucide-react';
 import './ImpactDashboard.css';
 
-// --- MOCK DATA ---
+// --- MOCK DATA (Disesuaikan dengan target proposal pilot Kec. Selupu Rejang) ---
 const monthlyFoodLossData = [
-  { name: 'Jan', loss: 85, prevented: 20 },
-  { name: 'Feb', loss: 78, prevented: 35 },
-  { name: 'Mar', loss: 90, prevented: 45 },
-  { name: 'Apr', loss: 65, prevented: 50 },
-  { name: 'May', loss: 60, prevented: 70 },
-  { name: 'Jun', loss: 55, prevented: 85 },
-  { name: 'Jul', loss: 48, prevented: 95 },
-  { name: 'Aug', loss: 42, prevented: 110 },
-  { name: 'Sep', loss: 38, prevented: 125 },
-  { name: 'Oct', loss: 35, prevented: 140 },
-  { name: 'Nov', loss: 30, prevented: 155 },
-  { name: 'Dec', loss: 25, prevented: 170 },
+  { name: 'Jan', loss: 18, prevented: 4 },
+  { name: 'Feb', loss: 16, prevented: 7 },
+  { name: 'Mar', loss: 19, prevented: 9 },
+  { name: 'Apr', loss: 14, prevented: 10 },
+  { name: 'May', loss: 12, prevented: 14 },
+  { name: 'Jun', loss: 11, prevented: 17 },
+  { name: 'Jul', loss: 10, prevented: 19 },
+  { name: 'Aug', loss: 9, prevented: 22 },
+  { name: 'Sep', loss: 8, prevented: 25 },
+  { name: 'Oct', loss: 7, prevented: 28 },
+  { name: 'Nov', loss: 6, prevented: 31 },
+  { name: 'Dec', loss: 5, prevented: 34 },
 ];
 
 const backhaulSavingsData = [
-  { name: 'Q1', trips: 120, savings: 45 },
-  { name: 'Q2', trips: 180, savings: 75 },
-  { name: 'Q3', trips: 250, savings: 110 },
-  { name: 'Q4', trips: 310, savings: 140 },
+  { name: 'Q1', trips: 18, savings: 8 },
+  { name: 'Q2', trips: 28, savings: 14 },
+  { name: 'Q3', trips: 38, savings: 20 },
+  { name: 'Q4', trips: 46, savings: 26 },
 ];
 
 const logisticsEfficiencyData = [
-  { name: 'Jan', eff: 45 }, { name: 'Feb', eff: 48 }, { name: 'Mar', eff: 52 },
-  { name: 'Apr', eff: 58 }, { name: 'May', eff: 65 }, { name: 'Jun', eff: 72 },
-  { name: 'Jul', eff: 78 }, { name: 'Aug', eff: 82 }, { name: 'Sep', eff: 85 },
-  { name: 'Oct', eff: 88 }, { name: 'Nov', eff: 91 }, { name: 'Dec', eff: 94 },
+  { name: 'Jan', eff: 35 }, { name: 'Feb', eff: 38 }, { name: 'Mar', eff: 40 },
+  { name: 'Apr', eff: 43 }, { name: 'May', eff: 47 }, { name: 'Jun', eff: 50 },
+  { name: 'Jul', eff: 53 }, { name: 'Aug', eff: 55 }, { name: 'Sep', eff: 57 },
+  { name: 'Oct', eff: 58 }, { name: 'Nov', eff: 60 }, { name: 'Dec', eff: 62 },
 ];
 
 const annualComparisonData = [
-  { year: '2024', conventional: 320, pangandali: 150 },
-  { year: '2025', conventional: 280, pangandali: 450 },
-  { year: '2026(P)', conventional: 210, pangandali: 780 },
+  { year: '2025 (Pilot)', conventional: 85, pangandali: 40 },
+  { year: '2026 (P)', conventional: 70, pangandali: 120 },
+  { year: '2027 (P)', conventional: 55, pangandali: 200 },
 ];
 
 const sparklineData = Array.from({ length: 10 }).map((_, i) => ({ value: Math.random() * 100 }));
@@ -129,8 +129,8 @@ export default function ImpactDashboard() {
         <div className="bi-header">
           <div>
             <h1 className="bi-title">Dampak & SDGs</h1>
-            <p className="bi-subtitle">Evaluasi komprehensif distribusi logistik hortikultura PanganDali</p>
-            <p style={{ fontSize: '12px', color: 'var(--bi-muted)', fontStyle: 'italic', marginTop: '4px' }}>Catatan: Seluruh data pada dashboard ini merupakan hasil simulasi/proyeksi berdasarkan target indikator proposal pilot, bukan pengukuran aktual.</p>
+            <p className="bi-subtitle">Evaluasi distribusi logistik hortikultura PanganDali — Pilot Kec. Selupu Rejang</p>
+            <p style={{ fontSize: '12px', color: '#94a3b8', marginTop: '4px', fontStyle: 'italic' }}>* Data berikut merupakan hasil simulasi/proyeksi berdasarkan target indikator proposal pilot</p>
           </div>
           
           <div className="bi-actions">
@@ -164,8 +164,8 @@ export default function ImpactDashboard() {
               <ShieldAlert size={24} />
             </div>
             <div className="bi-exec-info">
-              <span className="bi-exec-value">520<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>Ton</span></span>
-              <span className="bi-exec-label">Food Loss Prevented (Ilustrasi Skenario)</span>
+              <span className="bi-exec-value">34<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>Ton</span></span>
+              <span className="bi-exec-label">Food Loss Prevented (Simulasi Pilot)</span>
             </div>
           </motion.div>
 
@@ -174,8 +174,8 @@ export default function ImpactDashboard() {
               <DollarSign size={24} />
             </div>
             <div className="bi-exec-info">
-              <span className="bi-exec-value">2.09<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>Miliar</span></span>
-              <span className="bi-exec-label">Nilai Ekonomi Diselamatkan (Ilustrasi Skenario)</span>
+              <span className="bi-exec-value">136<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>Juta</span></span>
+              <span className="bi-exec-label">Nilai Ekonomi Diselamatkan (Simulasi Pilot)</span>
             </div>
           </motion.div>
 
@@ -184,8 +184,8 @@ export default function ImpactDashboard() {
               <Truck size={24} />
             </div>
             <div className="bi-exec-info">
-              <span className="bi-exec-value">840<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>Trips</span></span>
-              <span className="bi-exec-label">Total Backhaul Trips (Ilustrasi Skenario)</span>
+              <span className="bi-exec-value">130<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>Trips</span></span>
+              <span className="bi-exec-label">Total Backhaul Trips (Simulasi Pilot)</span>
             </div>
           </motion.div>
 
@@ -194,29 +194,29 @@ export default function ImpactDashboard() {
               <Activity size={24} />
             </div>
             <div className="bi-exec-info">
-              <span className="bi-exec-value">78.5<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>%</span></span>
-              <span className="bi-exec-label">Logistics Efficiency (Ilustrasi Skenario)</span>
+              <span className="bi-exec-value">62<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>%</span></span>
+              <span className="bi-exec-label">Logistics Efficiency (Target: ≥60%)</span>
             </div>
           </motion.div>
         </div>
 
-        {/* NATIONAL IMPACT OVERVIEW (8 Grid Cards) */}
-        <h2 className="bi-section-title"><MapPin size={18} /> Ringkasan Dampak (Ilustrasi Skenario)</h2>
+        {/* PILOT IMPACT OVERVIEW (8 Grid Cards) */}
+        <h2 className="bi-section-title"><MapPin size={18} /> Ringkasan Dampak Pilot (Kec. Selupu Rejang)</h2>
         <div className="bi-grid-4">
           {[
-            { t: 'Total Tonnage Distributed', v: '4,250 Ton', badge: '↑ 12%', color: '#10b981' },
-            { t: 'Logistics Cost Saved', v: 'Rp 450 Jt', badge: '↑ 8%', color: '#3b82f6' },
-            { t: 'Active Distribution Routes', v: '24 Rute', badge: '+3 Rute', color: '#8b5cf6' },
-            { t: 'Active Farmers Assisted', v: '1,205 Org', badge: '↑ 15%', color: '#f59e0b' },
-            { t: 'Average Delivery Time', v: '18 Jam', badge: '↓ 4 Jam', color: '#16a34a' },
-            { t: 'Carbon Emission Reduced', v: '120 Ton', badge: '↑ 20%', color: '#06b6d4' },
-            { t: 'Empty Backhaul Utilized', v: '840 Truk', badge: '↑ 35%', color: '#6366f1' },
-            { t: 'Farmer Price Share', v: '62%', badge: '↑ 7%', color: '#ec4899' },
+            { t: 'Total Komoditas Terdistribusi', v: '85 Ton', badge: 'Simulasi', color: '#10b981' },
+            { t: 'Biaya Logistik Dihemat', v: 'Rp 68 Jt', badge: 'Simulasi', color: '#3b82f6' },
+            { t: 'Rute Distribusi Aktif', v: '4 Rute', badge: 'Pilot', color: '#8b5cf6' },
+            { t: 'Petani Tergabung', v: '300 Org', badge: 'Target', color: '#f59e0b' },
+            { t: 'Rata-rata Waktu Tempuh', v: '3 Jam', badge: 'ke Bengkulu', color: '#16a34a' },
+            { t: 'Reduksi Emisi Karbon', v: '8.5 Ton', badge: 'Proyeksi', color: '#06b6d4' },
+            { t: 'Utilisasi Backhaul', v: '60%', badge: 'Target: ≥60%', color: '#6366f1' },
+            { t: 'Farmer Price Share', v: '55%', badge: 'Target: ≥55%', color: '#ec4899' },
           ].map((item, idx) => (
             <motion.div className="bi-card bi-overview-card" variants={itemVariants} key={idx}>
               <div className="bi-overview-header">
                 <span className="bi-overview-title">{item.t}</span>
-                <div className={`bi-trend-badge ${item.badge.includes('↓') ? 'bi-trend-down' : 'bi-trend-up'}`}>
+                <div className={`bi-trend-badge bi-trend-up`}>
                   {item.badge}
                 </div>
               </div>
@@ -244,29 +244,26 @@ export default function ImpactDashboard() {
           <motion.div className="bi-card" variants={itemVariants}>
             <h3 className="bi-section-title"><Zap size={18} /> Efficiency Metrics</h3>
             <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <ProgressBar label="Logistics Cost Efficiency" value={85} color="#10b981" />
-              <ProgressBar label="Distribution Utilization" value={92} color="#10b981" />
-              <ProgressBar label="Vehicle Utilization (Load Factor)" value={76} color="#f59e0b" />
-              <ProgressBar label="Backhaul Utilization" value={68} color="#f59e0b" />
-              <ProgressBar label="Delivery Accuracy (SLA)" value={98} color="#10b981" />
+              <ProgressBar label="Logistics Cost Efficiency" value={62} color="#10b981" />
+              <ProgressBar label="Distribution Utilization" value={58} color="#f59e0b" />
+              <ProgressBar label="Vehicle Utilization (Load Factor)" value={55} color="#f59e0b" />
+              <ProgressBar label="Backhaul Utilization (Target: ≥60%)" value={60} color="#10b981" />
+              <ProgressBar label="Delivery Accuracy (SLA)" value={85} color="#10b981" />
             </div>
           </motion.div>
         </div>
 
         {/* KPI PERFORMANCE CARDS */}
-        <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '8px', padding: '14px 16px', marginTop: '32px', marginBottom: '16px', fontSize: '13px', color: '#92400e', lineHeight: '1.6' }}>
-          <strong>⚠ Perhatian:</strong> Angka moneter dan tonase pada halaman ini adalah <strong>ilustrasi skenario</strong> untuk keperluan mockup, bukan hasil pengukuran aktual. Indikator resmi yang diverifikasi hanya yang tercantum pada tabel indikator proposal: utilisasi backhaul ≥60%, farmer&apos;s share ≥55%, 300 petani terlibat, dan ketepatan ekstraksi ≥85%.
-        </div>
-        <h2 className="bi-section-title"><Activity size={18} /> Indikator Kinerja Utama</h2>
+        <h2 className="bi-section-title" style={{ marginTop: '32px' }}><Activity size={18} /> Indikator Kinerja Utama (Simulasi Pilot)</h2>
         <div className="bi-grid-4">
-          <KPICard title="Food Loss (Ilustrasi)" value="520 Ton" icon={ShieldAlert} color="#16a34a" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
-          <KPICard title="Econ Value (Ilustrasi)" value="Rp 2.09 M" icon={DollarSign} color="#8b5cf6" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
-          <KPICard title="Empty Backhaul Utilized" value="840 Trips" icon={Truck} color="#0ea5e9" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
-          <KPICard title="Logistics Cost Saved" value="Rp 450 Jt" icon={TrendingUp} color="#f59e0b" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
-          <KPICard title="Logistics Efficiency" value="78.5%" icon={Zap} color="#10b981" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
-          <KPICard title="Total Saved Tonnage" value="1,200 T" icon={PackageCheck} color="#6366f1" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
-          <KPICard title="Active Farmers" value="1,205" icon={Users} color="#ec4899" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
-          <KPICard title="Successful Deliveries" value="98.5%" icon={CheckCircle} color="#06b6d4" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
+          <KPICard title="Food Loss Prevented" value="34 Ton" icon={ShieldAlert} color="#16a34a" trend="up" trendVal="Simulasi" sparkData={sparklineData} />
+          <KPICard title="Nilai Ekonomi Diselamatkan" value="Rp 136 Jt" icon={DollarSign} color="#8b5cf6" trend="up" trendVal="Simulasi" sparkData={sparklineData} />
+          <KPICard title="Backhaul Trips" value="130 Trips" icon={Truck} color="#0ea5e9" trend="up" trendVal="Target" sparkData={sparklineData} />
+          <KPICard title="Biaya Logistik Dihemat" value="Rp 68 Jt" icon={TrendingUp} color="#f59e0b" trend="up" trendVal="Simulasi" sparkData={sparklineData} />
+          <KPICard title="Logistics Efficiency" value="62%" icon={Zap} color="#10b981" trend="up" trendVal="Target: ≥60%" sparkData={sparklineData} />
+          <KPICard title="Komoditas Terdistribusi" value="85 Ton" icon={PackageCheck} color="#6366f1" trend="up" trendVal="Simulasi" sparkData={sparklineData} />
+          <KPICard title="Petani Aktif" value="300" icon={Users} color="#ec4899" trend="up" trendVal="Target" sparkData={sparklineData} />
+          <KPICard title="Farmer Price Share" value="55%" icon={CheckCircle} color="#06b6d4" trend="up" trendVal="Target: ≥55%" sparkData={sparklineData} />
         </div>
 
         {/* MAIN CHARTS ROW 1 */}
@@ -377,7 +374,7 @@ export default function ImpactDashboard() {
         <div className="bi-grid-2">
           {/* Map Placeholder */}
           <motion.div className="bi-card" variants={itemVariants} style={{ display: 'flex', flexDirection: 'column' }}>
-            <h3 className="bi-section-title"><MapPin size={18} /> Regional Impact Map (Bengkulu)</h3>
+            <h3 className="bi-section-title"><MapPin size={18} /> Peta Dampak Regional (Pilot: Selupu Rejang — Kota Bengkulu)</h3>
             <div style={{ flex: 1, background: '#f1f5f9', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px', border: '1px dashed #cbd5e1' }}>
               <div style={{ textAlign: 'center', color: '#64748b' }}>
                 <MapPin size={48} style={{ opacity: 0.5, marginBottom: '12px' }} />
@@ -396,9 +393,9 @@ export default function ImpactDashboard() {
                 <Sparkles size={18} color="#2563eb" /> AI Insight & Recommendation
               </h3>
               <ul className="bi-ai-list">
-                <li><CheckCircle size={16} color="#16a34a" /> <span><strong>Food loss turun 18%</strong> dibanding tahun sebelumnya, disumbang terbesar oleh rute Rejang Lebong - Palembang.</span></li>
-                <li><TrendingUp size={16} color="#2563eb" /> <span><strong>Efisiensi logistik meningkat 12%</strong> berkat utilisasi armada backhaul pada Q3.</span></li>
-                <li><ShieldAlert size={16} color="#f59e0b" /> <span><strong>Rekomendasi:</strong> Perluas titik kumpul (hub) di area Bengkulu Utara untuk memangkas waktu tunggu panen kembang kol.</span></li>
+                <li><CheckCircle size={16} color="#16a34a" /> <span><strong>Proyeksi: food loss berkurang 15%</strong> pada rute Selupu Rejang — Kota Bengkulu berdasarkan simulasi pilot.</span></li>
+                <li><TrendingUp size={16} color="#2563eb" /> <span><strong>Utilisasi backhaul mencapai target 60%</strong> berdasarkan proyeksi armada yang tersedia di koridor pilot.</span></li>
+                <li><ShieldAlert size={16} color="#f59e0b" /> <span><strong>Rekomendasi:</strong> Perkuat titik kumpul (hub) di Kelurahan Selupu Rejang untuk memangkas waktu tunggu panen hortikultura.</span></li>
               </ul>
             </motion.div>
 
@@ -434,30 +431,30 @@ export default function ImpactDashboard() {
               </thead>
               <tbody>
                 <tr>
-                  <td><strong>Rejang Lebong</strong></td>
-                  <td>Palembang (Rencana)</td>
+                  <td><strong>Selupu Rejang</strong></td>
+                  <td>Kota Bengkulu</td>
+                  <td>Kubis</td>
+                  <td>25 Ton</td>
+                  <td>3 Jam</td>
+                  <td style={{ color: '#16a34a', fontWeight: 'bold' }}>65%</td>
+                  <td><span className="bi-trend-badge bi-trend-up">Optimal</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Selupu Rejang</strong></td>
+                  <td>Kota Bengkulu</td>
                   <td>Cabai Besar</td>
-                  <td>120 Ton</td>
-                  <td>6 Jam</td>
-                  <td style={{ color: '#16a34a', fontWeight: 'bold' }}>94%</td>
+                  <td>18 Ton</td>
+                  <td>3 Jam</td>
+                  <td style={{ color: '#16a34a', fontWeight: 'bold' }}>62%</td>
                   <td><span className="bi-trend-badge bi-trend-up">Optimal</span></td>
                 </tr>
                 <tr>
-                  <td><strong>Rejang Lebong</strong></td>
-                  <td>DKI Jakarta (Rencana)</td>
-                  <td>Terung</td>
-                  <td>350 Ton</td>
-                  <td>18 Jam</td>
-                  <td style={{ color: '#16a34a', fontWeight: 'bold' }}>88%</td>
-                  <td><span className="bi-trend-badge bi-trend-up">Optimal</span></td>
-                </tr>
-                <tr>
-                  <td><strong>Kepahiang</strong></td>
-                  <td>Bengkulu Kota</td>
+                  <td><strong>Selupu Rejang</strong></td>
+                  <td>Kota Bengkulu</td>
                   <td>Kembang Kol</td>
-                  <td>45 Ton</td>
-                  <td>2.5 Jam</td>
-                  <td style={{ color: '#f59e0b', fontWeight: 'bold' }}>72%</td>
+                  <td>12 Ton</td>
+                  <td>3 Jam</td>
+                  <td style={{ color: '#f59e0b', fontWeight: 'bold' }}>55%</td>
                   <td><span className="bi-trend-badge" style={{ background: '#fef3c7', color: '#b45309' }}>Menengah</span></td>
                 </tr>
               </tbody>
