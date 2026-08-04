@@ -43,7 +43,7 @@ function AnimatedNumber({ value, suffix = '' }) {
 
 function Dampak() {
   return (
-    <section className="section">
+    <section id="dampak" className="section">
       <div className="container">
         <div className="dampak-banner">
           <div className="dampak-grid">
@@ -57,15 +57,18 @@ function Dampak() {
             <div className="dampak-stat">
               <Users size={20} className="dampak-stat-icon" />
               <AnimatedNumber value="300" suffix="+" />
-              <div className="stat-label">Petani Tergabung</div>
+              <div className="stat-label">Petani Terlibat (Target Pilot)</div>
             </div>
             
             <div className="dampak-stat">
               <Gauge size={20} className="dampak-stat-icon" />
               <AnimatedNumber value="60" suffix="%" />
-              <div className="stat-label">Backhaul Efficiency</div>
+              <div className="stat-label">Utilisasi Backhaul (Target ≥60%)</div>
             </div>
           </div>
+            <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', marginTop: '16px', textAlign: 'center', fontStyle: 'italic' }}>
+              Angka di atas merupakan target indikator pilot, bukan capaian yang sudah terjadi.
+            </p>
         </div>
       </div>
     </section>

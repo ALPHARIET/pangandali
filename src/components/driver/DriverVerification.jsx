@@ -119,7 +119,7 @@ function DriverVerification({ user, onLogout, onStatusChange }) {
         id: `driver-${Date.now()}`,
         type: 'Driver',
         email: user?.email,
-        name: user?.name || 'Driver',
+        name: user?.name || 'Mitra Logistik',
         date: new Date().toISOString(),
         status: 'pending'
       };
@@ -283,7 +283,7 @@ function DriverVerification({ user, onLogout, onStatusChange }) {
           <div className="driver-verify__nav-avatar">
             {user?.name ? user.name.substring(0, 2).toUpperCase() : 'DR'}
           </div>
-          <span className="driver-verify__nav-name">{user?.name || 'Driver'}</span>
+          <span className="driver-verify__nav-name">{user?.name || 'Mitra Logistik'}</span>
           <button className="driver-verify__nav-logout" onClick={onLogout} title="Keluar">
             <LogOut size={18} />
           </button>

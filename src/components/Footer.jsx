@@ -20,6 +20,7 @@ function Footer() {
           <a href="#hero">Beranda</a>
           <a href="#tantangan">Tantangan</a>
           <a href="#solusi">Solusi</a>
+          <a href="#infopublik">Info Publik</a>
         </div>
       </div>
     </footer>

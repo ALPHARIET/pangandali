@@ -1156,7 +1156,7 @@ function AdminDashboard({ user, onLogout, isTPID }) {
               <div className="section-header">
                 <div>
                   <h2 className="section-title">Verifikasi Akun Mitra</h2>
-                  <p className="section-desc">Tinjau dan setujui pendaftaran akun Driver Backhaul dan Distributor.</p>
+                  <p className="section-desc">Tinjau dan setujui pendaftaran akun Mitra Logistik (Backhaul) dan Distributor.</p>
                 </div>
               </div>
 
@@ -1191,7 +1191,7 @@ function AdminDashboard({ user, onLogout, isTPID }) {
                             <td>{v.email}</td>
                             <td>
                               <span className={`badge ${v.type === 'Driver' ? 'success' : 'primary'}`}>
-                                {v.type}
+                                {v.type === 'Driver' ? 'Mitra Logistik' : v.type}
                               </span>
                             </td>
                             <td>

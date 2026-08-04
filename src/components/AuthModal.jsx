@@ -288,7 +288,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
             <div className="login-hint" style={{ fontSize: '11px', textAlign: 'center' }}>
               <strong>Admin:</strong> admin / admin<br/>
               <strong>TPID:</strong> budi@pangandali.id / password123<br/>
-              <strong>Driver:</strong> driver / driver123<br/>
+              <strong>Mitra Logistik:</strong> driver / driver123<br/>
               <strong>Distributor:</strong> distributor / distributor123
             </div>
 
@@ -343,7 +343,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
                   onChange={(e) => setSignupRole(e.target.value)}
                 >
                   <option value="Distributor">Distributor</option>
-                  <option value="Mitra Logistik">Mitra Logistik/Driver</option>
+                  <option value="Mitra Logistik">Mitra Logistik</option>
                 </select>
               </div>
             </div>

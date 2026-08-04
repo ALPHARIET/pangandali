@@ -116,7 +116,7 @@ const KPICard = ({ title, value, icon: Icon, color, trend, trendVal, sparkData }
 );
 
 export default function ImpactDashboard() {
-  const [yearFilter, setYearFilter] = useState('2025');
+  const [yearFilter, setYearFilter] = useState('skenario2');
 
   const handleExport = () => alert('Mengekspor laporan dashboard ke PDF...');
   const handleRefresh = () => alert('Menyegarkan data dari node terdistribusi...');
@@ -130,13 +130,14 @@ export default function ImpactDashboard() {
           <div>
             <h1 className="bi-title">Dampak & SDGs</h1>
             <p className="bi-subtitle">Evaluasi komprehensif distribusi logistik hortikultura PanganDali</p>
+            <p style={{ fontSize: '12px', color: 'var(--bi-muted)', fontStyle: 'italic', marginTop: '4px' }}>Catatan: Seluruh data pada dashboard ini merupakan hasil simulasi/proyeksi berdasarkan target indikator proposal pilot, bukan pengukuran aktual.</p>
           </div>
           
           <div className="bi-actions">
             <select className="bi-filter-select" value={yearFilter} onChange={(e) => setYearFilter(e.target.value)}>
-              <option value="2024">Tahun 2024</option>
-              <option value="2025">Tahun 2025</option>
-              <option value="2026">Tahun 2026 (Proyeksi)</option>
+              <option value="skenario1">Skenario Tahun ke-1</option>
+              <option value="skenario2">Skenario Tahun ke-2</option>
+              <option value="skenario3">Skenario Tahun ke-3</option>
             </select>
             <select className="bi-filter-select">
               <option value="all">Semua Komoditas</option>
@@ -164,7 +165,7 @@ export default function ImpactDashboard() {
             </div>
             <div className="bi-exec-info">
               <span className="bi-exec-value">520<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>Ton</span></span>
-              <span className="bi-exec-label">Food Loss Prevented (Estimasi)</span>
+              <span className="bi-exec-label">Food Loss Prevented (Ilustrasi Skenario)</span>
             </div>
           </motion.div>
 
@@ -174,7 +175,7 @@ export default function ImpactDashboard() {
             </div>
             <div className="bi-exec-info">
               <span className="bi-exec-value">2.09<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>Miliar</span></span>
-              <span className="bi-exec-label">Nilai Ekonomi Diselamatkan (Estimasi)</span>
+              <span className="bi-exec-label">Nilai Ekonomi Diselamatkan (Ilustrasi Skenario)</span>
             </div>
           </motion.div>
 
@@ -184,7 +185,7 @@ export default function ImpactDashboard() {
             </div>
             <div className="bi-exec-info">
               <span className="bi-exec-value">840<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>Trips</span></span>
-              <span className="bi-exec-label">Total Backhaul Trips</span>
+              <span className="bi-exec-label">Total Backhaul Trips (Ilustrasi Skenario)</span>
             </div>
           </motion.div>
 
@@ -194,13 +195,13 @@ export default function ImpactDashboard() {
             </div>
             <div className="bi-exec-info">
               <span className="bi-exec-value">78.5<span style={{ fontSize: '14px', color: '#64748b', marginLeft: '4px' }}>%</span></span>
-              <span className="bi-exec-label">Logistics Efficiency</span>
+              <span className="bi-exec-label">Logistics Efficiency (Ilustrasi Skenario)</span>
             </div>
           </motion.div>
         </div>
 
         {/* NATIONAL IMPACT OVERVIEW (8 Grid Cards) */}
-        <h2 className="bi-section-title"><MapPin size={18} /> National Impact Overview</h2>
+        <h2 className="bi-section-title"><MapPin size={18} /> Ringkasan Dampak (Ilustrasi Skenario)</h2>
         <div className="bi-grid-4">
           {[
             { t: 'Total Tonnage Distributed', v: '4,250 Ton', badge: '↑ 12%', color: '#10b981' },
@@ -228,14 +229,14 @@ export default function ImpactDashboard() {
         <div className="bi-grid-2">
           {/* YoY Growth */}
           <motion.div className="bi-card" variants={itemVariants}>
-            <h3 className="bi-section-title"><TrendingUp size={18} /> Year-over-Year Growth</h3>
+            <h3 className="bi-section-title"><TrendingUp size={18} /> Pertumbuhan Antar Skenario</h3>
             <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              <ProgressBar label="2024 - Fase Inisiasi" value={35} color="#cbd5e1" icon={Clock} />
-              <ProgressBar label="2025 - Fase Ekspansi (Saat ini)" value={78} color="#3b82f6" icon={Activity} />
-              <ProgressBar label="2026 - Target Proyeksi" value={100} color="#16a34a" icon={Sparkles} />
+              <ProgressBar label="Skenario Tahun ke-1 - Fase Inisiasi" value={35} color="#cbd5e1" icon={Clock} />
+              <ProgressBar label="Skenario Tahun ke-2 - Fase Ekspansi" value={78} color="#3b82f6" icon={Activity} />
+              <ProgressBar label="Skenario Tahun ke-3 - Target Penuh" value={100} color="#16a34a" icon={Sparkles} />
             </div>
             <p style={{ marginTop: '20px', fontSize: '13px', color: 'var(--bi-muted)' }}>
-              Pertumbuhan nilai diselamatkan secara kumulatif diproyeksikan mencapai efisiensi maksimal pada 2026 seiring dengan penetrasi armada backhaul.
+              Pertumbuhan nilai diselamatkan secara kumulatif diproyeksikan mencapai efisiensi maksimal pada Skenario Tahun ke-3 seiring dengan penetrasi armada backhaul.
             </p>
           </motion.div>
 
@@ -253,18 +254,19 @@ export default function ImpactDashboard() {
         </div>
 
         {/* KPI PERFORMANCE CARDS */}
-        <h2 className="bi-section-title" style={{ marginTop: '32px' }}><Activity size={18} /> Key Performance Indicators</h2>
+        <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: '8px', padding: '14px 16px', marginTop: '32px', marginBottom: '16px', fontSize: '13px', color: '#92400e', lineHeight: '1.6' }}>
+          <strong>⚠ Perhatian:</strong> Angka moneter dan tonase pada halaman ini adalah <strong>ilustrasi skenario</strong> untuk keperluan mockup, bukan hasil pengukuran aktual. Indikator resmi yang diverifikasi hanya yang tercantum pada tabel indikator proposal: utilisasi backhaul ≥60%, farmer&apos;s share ≥55%, 300 petani terlibat, dan ketepatan ekstraksi ≥85%.
+        </div>
+        <h2 className="bi-section-title"><Activity size={18} /> Indikator Kinerja Utama</h2>
         <div className="bi-grid-4">
-          {/* TODO: verifikasi angka ini terhadap tabel indikator proposal */}
-          <KPICard title="Food Loss (Estimasi)" value="520 Ton" icon={ShieldAlert} color="#16a34a" trend="up" trendVal="15%" sparkData={sparklineData} />
-          {/* TODO: verifikasi angka ini terhadap tabel indikator proposal */}
-          <KPICard title="Econ Value (Estimasi)" value="Rp 2.09 M" icon={DollarSign} color="#8b5cf6" trend="up" trendVal="22%" sparkData={sparklineData} />
-          <KPICard title="Empty Backhaul Utilized" value="840 Trips" icon={Truck} color="#0ea5e9" trend="up" trendVal="12%" sparkData={sparklineData} />
-          <KPICard title="Logistics Cost Saved" value="Rp 450 Jt" icon={TrendingUp} color="#f59e0b" trend="up" trendVal="8%" sparkData={sparklineData} />
-          <KPICard title="Logistics Efficiency" value="78.5%" icon={Zap} color="#10b981" trend="up" trendVal="5%" sparkData={sparklineData} />
-          <KPICard title="Total Saved Tonnage" value="1,200 T" icon={PackageCheck} color="#6366f1" trend="up" trendVal="10%" sparkData={sparklineData} />
-          <KPICard title="Active Farmers" value="1,205" icon={Users} color="#ec4899" trend="up" trendVal="18%" sparkData={sparklineData} />
-          <KPICard title="Successful Deliveries" value="98.5%" icon={CheckCircle} color="#06b6d4" trend="down" trendVal="0.5%" sparkData={sparklineData} />
+          <KPICard title="Food Loss (Ilustrasi)" value="520 Ton" icon={ShieldAlert} color="#16a34a" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
+          <KPICard title="Econ Value (Ilustrasi)" value="Rp 2.09 M" icon={DollarSign} color="#8b5cf6" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
+          <KPICard title="Empty Backhaul Utilized" value="840 Trips" icon={Truck} color="#0ea5e9" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
+          <KPICard title="Logistics Cost Saved" value="Rp 450 Jt" icon={TrendingUp} color="#f59e0b" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
+          <KPICard title="Logistics Efficiency" value="78.5%" icon={Zap} color="#10b981" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
+          <KPICard title="Total Saved Tonnage" value="1,200 T" icon={PackageCheck} color="#6366f1" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
+          <KPICard title="Active Farmers" value="1,205" icon={Users} color="#ec4899" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
+          <KPICard title="Successful Deliveries" value="98.5%" icon={CheckCircle} color="#06b6d4" trend="up" trendVal="Ilustrasi Skenario" sparkData={sparklineData} />
         </div>
 
         {/* MAIN CHARTS ROW 1 */}

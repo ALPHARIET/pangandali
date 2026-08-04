@@ -3,7 +3,7 @@ import {
   LogOut, ArrowRight, Truck, DollarSign, Bell,
   Calendar, Shield, Route, MapPin, Package,
   Clock, ChevronDown, Heart, MessageCircle, CheckCircle,
-  TrendingUp, Workflow, HelpCircle, Zap, Users
+  TrendingUp, Workflow, HelpCircle, Zap, Users, Search
 } from 'lucide-react';
 
 /* ─── Scroll-reveal hook ─── */
@@ -127,10 +127,10 @@ const timeline = [
 
 const infoCards = [
   { icon: <Package size={22} />, title: 'Muatan Tersedia', value: 'Setiap hari', color: 'rgba(34,197,94,0.08)', iconColor: '#16a34a' },
-  { icon: <MapPin size={22} />, title: 'Area Distribusi', value: 'Bengkulu & Sekitarnya', color: 'rgba(59,130,246,0.08)', iconColor: '#2563eb' },
+  { icon: <MapPin size={22} />, title: 'Area Layanan', value: 'Rejang Lebong – Kota Bengkulu (Pilot)', color: 'rgba(59,130,246,0.08)', iconColor: '#2563eb' },
   { icon: <Truck size={22} />, title: 'Jenis Komoditas', value: 'Pangan & Agrikultur', color: 'rgba(245,158,11,0.08)', iconColor: '#d97706' },
-  { icon: <Route size={22} />, title: 'Estimasi Jarak', value: '50–300 km', color: 'rgba(99,102,241,0.08)', iconColor: '#6366f1' },
-  { icon: <TrendingUp size={22} />, title: 'Estimasi Pendapatan', value: 'Rp 500rb – 3jt/trip', color: 'rgba(236,72,153,0.08)', iconColor: '#db2777' },
+  { icon: <Route size={22} />, title: 'Estimasi Jarak', value: '80–120 km (koridor pilot)', color: 'rgba(99,102,241,0.08)', iconColor: '#6366f1' },
+  { icon: <TrendingUp size={22} />, title: 'Estimasi Pendapatan', value: 'sesuai kesepakatan per trip', color: 'rgba(236,72,153,0.08)', iconColor: '#db2777' },
 ];
 
 const dummyRecommendations = [
@@ -159,7 +159,7 @@ function DriverHome({ user, onLogout }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const driverName = user?.name?.split(' ')[0] || 'Driver';
+  const driverName = user?.name?.split(' ')[0] || 'Mitra';
 
   const handleUpdateFleet = () => {
     if(!fleetCapacity || !fleetRoute || !fleetLocation) return alert("Lengkapi data armada (kapasitas, rute, dan lokasi).");
@@ -177,7 +177,7 @@ function DriverHome({ user, onLogout }) {
           </div>
           <div className="driver-nav__right">
             <div className="driver-nav__user">
-              <span className="driver-nav__user-name">{user?.name || 'Driver'}</span>
+              <span className="driver-nav__user-name">{user?.name || 'Mitra Logistik'}</span>
               <div className="driver-nav__user-avatar">
                 {user?.name ? user.name.substring(0, 2).toUpperCase() : 'DR'}
               </div>
@@ -195,13 +195,13 @@ function DriverHome({ user, onLogout }) {
           <div className="driver-hero__content">
             <span className="driver-hero__badge">
               <Truck size={14} />
-              Mitra Driver Backhaul
+              Mitra Logistik (Backhaul)
             </span>
             <h1 className="driver-hero__greeting">
               Halo, {driverName} <span className="wave">👋</span>
             </h1>
             <p className="driver-hero__subtitle">
-              Selamat datang sebagai Mitra Driver Backhaul. Dapatkan muatan balik dan maksimalkan penghasilan setiap perjalanan.
+              Selamat datang sebagai Mitra Logistik (Backhaul). Dapatkan muatan balik dan maksimalkan penghasilan setiap perjalanan.
             </p>
             <a href="#armada" className="driver-hero__cta" style={{ textDecoration: 'none' }}>
               Mulai Ambil Muatan
@@ -306,7 +306,7 @@ function DriverHome({ user, onLogout }) {
               <h2>Apa itu <em style={{ color: 'var(--primary-dark)', fontStyle: 'italic' }}>Backhaul</em>?</h2>
               <p style={{ marginTop: 16 }}>
                 Backhaul adalah sistem yang membantu supir memperoleh muatan balik sehingga perjalanan pulang tidak kosong.
-                Dengan bergabung sebagai mitra driver, Anda dapat mengoptimalkan setiap perjalanan dan mendapatkan penghasilan tambahan
+                Dengan bergabung sebagai Mitra Logistik, Anda dapat mengoptimalkan setiap perjalanan dan mendapatkan penghasilan tambahan
                 dari muatan yang tersedia di rute pulang Anda.
               </p>
               <p style={{ marginTop: 12 }}>
@@ -329,9 +329,9 @@ function DriverHome({ user, onLogout }) {
               <Zap size={14} />
               Keuntungan
             </span>
-            <h2 className="section-title">Keuntungan Menjadi Driver</h2>
+            <h2 className="section-title">Keuntungan Menjadi Mitra Logistik</h2>
             <p className="section-desc">
-              Bergabung sebagai mitra driver memberikan berbagai manfaat untuk meningkatkan produktivitas dan penghasilan Anda.
+              Bergabung sebagai Mitra Logistik memberikan berbagai manfaat untuk meningkatkan produktivitas dan penghasilan Anda.
             </p>
           </div>
 
@@ -424,7 +424,7 @@ function DriverHome({ user, onLogout }) {
             </span>
             <h2 className="section-title">Pertanyaan Umum</h2>
             <p className="section-desc">
-              Jawaban untuk pertanyaan yang sering ditanyakan oleh mitra driver.
+              Jawaban untuk pertanyaan yang sering ditanyakan oleh Mitra Logistik.
             </p>
           </div>
 
@@ -454,7 +454,7 @@ function DriverHome({ user, onLogout }) {
       <footer className="driver-footer">
         <div className="driver-footer__container">
           <div>
-            <h3 className="driver-footer__title">PanganDali — Mitra Driver</h3>
+            <h3 className="driver-footer__title">PanganDali — Mitra Logistik</h3>
             <p className="driver-footer__desc">
               Platform distribusi pangan yang transparan dan responsif.
             </p>

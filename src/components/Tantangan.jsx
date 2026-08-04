@@ -26,7 +26,7 @@ function Tantangan() {
   }, []);
 
   return (
-    <section className="section" ref={sectionRef}>
+    <section id="tantangan" className="section" ref={sectionRef}>
       <div className="container">
         <div className="section-title-wrapper">
           <span className="section-label">

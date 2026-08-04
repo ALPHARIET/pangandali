@@ -47,7 +47,7 @@ function Solusi() {
   ];
 
   return (
-    <section className="section solusi-section">
+    <section id="solusi" className="section solusi-section">
       <div className="container">
         <div className="solusi-header">
           <div className="section-title-wrapper">
@@ -57,7 +57,7 @@ function Solusi() {
             </span>
             <h2 className="section-title">Teknologi Presisi untuk Pertanian</h2>
           </div>
-          <a href="#fitur" className="solusi-link">
+          <a href="#carakerja" className="solusi-link">
             <span>Pelajari Fitur Lengkap</span>
             <ArrowRight size={16} />
           </a>

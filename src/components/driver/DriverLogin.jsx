@@ -71,12 +71,12 @@ function DriverLogin({ onLoginSuccess }) {
           <div className="driver-login__brand-icon">PD</div>
           <div className="driver-login__brand-text">
             PanganDali
-            <span>Mitra Driver Backhaul</span>
+            <span>Mitra Logistik (Backhaul)</span>
           </div>
         </div>
 
         <h1 className="driver-login__heading">
-          Masuk ke akun <em>Driver</em> Anda
+          Masuk ke akun Mitra Logistik Anda
         </h1>
         <p className="driver-login__sub">
           Gunakan akun yang telah didaftarkan oleh admin untuk mengakses layanan Backhaul.
@@ -187,7 +187,7 @@ function DriverLogin({ onLoginSuccess }) {
           </div>
 
           <h2 className="driver-login__illust-title">
-            Backhaul Driver
+             Mitra Logistik (Backhaul)
           </h2>
           <p className="driver-login__illust-desc">
             Jangan biarkan truk Anda pulang kosong. Dapatkan muatan balik dan tambah penghasilan setiap perjalanan.
@@ -196,7 +196,7 @@ function DriverLogin({ onLoginSuccess }) {
           <div className="driver-login__illust-stats">
             <div className="driver-login__illust-stat">
               <div className="driver-login__illust-stat-num">500+</div>
-              <div className="driver-login__illust-stat-label">Driver Aktif</div>
+              <div className="driver-login__illust-stat-label">Mitra Aktif</div>
             </div>
             <div className="driver-login__illust-stat">
               <div className="driver-login__illust-stat-num">60%</div>

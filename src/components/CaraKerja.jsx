@@ -59,7 +59,7 @@ function CaraKerja() {
   ];
 
   return (
-    <section className="section">
+    <section id="carakerja" className="section">
       <div className="container">
         <div className="section-title-wrapper">
           <span className="section-label">

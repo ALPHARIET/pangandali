@@ -3,7 +3,7 @@ import { ArrowRight, Sprout } from 'lucide-react';
 
 function Hero({ onCTA }) {
   return (
-    <header className="hero-section">
+    <header id="hero" className="hero-section">
       {/* Full-width background image */}
       <div className="hero-bg">
         <img 

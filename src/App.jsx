@@ -6,6 +6,7 @@ import Solusi from './components/Solusi';
 import CaraKerja from './components/CaraKerja';
 import Dampak from './components/Dampak';
 import Footer from './components/Footer';
+import InfoPublik from './components/InfoPublik';
 import AuthModal from './components/AuthModal';
 import AdminDashboard from './components/AdminDashboard';
 import DriverVerification from './components/driver/DriverVerification';
@@ -171,6 +172,8 @@ function App() {
       <CaraKerja />
       
       <Dampak />
+      
+      <InfoPublik />
       
       <Footer />
 
