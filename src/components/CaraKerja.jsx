@@ -28,32 +28,32 @@ function CaraKerja() {
   const steps = [
     {
       num: 1,
-      title: 'Input Data',
-      desc: 'Petani lapor panen via WhatsApp.',
+      title: 'Lapor Panen',
+      desc: 'Petani terdaftar melapor lewat WhatsApp dan mengonfirmasi ringkasannya.',
       color: '#10b981'
     },
     {
       num: 2,
       title: 'Validasi',
-      desc: 'Sistem memverifikasi kualitas & kuantitas.',
+      desc: 'Admin memeriksa kelengkapan dan kewajaran sebelum stok tersedia.',
       color: '#3b82f6'
     },
     {
       num: 3,
-      title: 'Matching',
-      desc: 'Distributor terhubung dengan pasokan terdekat.',
+      title: 'Pesanan',
+      desc: 'Distributor mengajukan pembelian; volume dikunci sementara, petani menerima atau menolak.',
       color: '#6366f1'
     },
     {
       num: 4,
-      title: 'Logistik',
-      desc: 'Armada ditugaskan dengan rute backhaul optimal.',
+      title: 'Muatan Balik',
+      desc: 'Armada searah direkomendasikan dan baru ditugaskan setelah mitra setuju.',
       color: '#f59e0b'
     },
     {
       num: 5,
-      title: 'Monitoring',
-      desc: 'TPID pantau pergerakan harga di dashboard.',
+      title: 'Pemantauan',
+      desc: 'Status, berat, km, dan BBM dicatat; dashboard menampilkan pasokan dan efisiensi.',
       color: '#10b981'
     }
   ];
@@ -68,7 +68,7 @@ function CaraKerja() {
           </span>
           <h2 className="section-title">Cara Kerja Ekosistem</h2>
           <p className="section-desc">
-            Satu siklus tertutup yang mengoptimalkan nilai dari hulu ke hilir.
+            Data yang sama dipakai untuk niaga, koordinasi pengiriman, dan informasi kebijakan.
           </p>
         </div>
 

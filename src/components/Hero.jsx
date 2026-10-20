@@ -18,13 +18,13 @@ function Hero({ onCTA }) {
         <div className="hero-content">
           <span className="hero-badge">
             <Sprout size={14} />
-            Smart City Ecosystem
+            Teknologi Hijau · Distribusi Hortikultura
           </span>
           <h1 className="hero-title">
-            Platform Distribution Intelligence untuk <span>Pengendalian</span> Inflasi Pangan Daerah
+            Koordinasi distribusi hortikultura dengan <span>muatan balik</span>
           </h1>
           <p className="hero-desc">
-            Menghubungkan Petani, Distributor, Mitra Logistik, dan TPID dalam satu ekosistem digital berbasis Smart City untuk rantai pasok yang transparan dan efisien.
+            PanganDali menghubungkan laporan panen petani, permintaan distributor, dan kapasitas armada yang sudah berjalan di koridor Rejang Lebong–Kota Bengkulu. Setiap kiriman mencatat jarak, BBM, dan susut supaya efisiensinya bisa diukur, bukan diasumsikan.
           </p>
           <div className="hero-cta-group">
             <button className="btn btn-primary btn-hero" onClick={onCTA}>

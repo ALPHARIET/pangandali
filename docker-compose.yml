@@ -1,0 +1,37 @@
+# Jalankan: cp backend/.env.example backend/.env (isi secret), lalu `docker compose up --build`.
+# Redis + worker belum dipakai: webhook memproses pesan dengan FastAPI BackgroundTasks.
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: pangandali
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pangandali}
+      POSTGRES_DB: pangandali
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pangandali"]
+      interval: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    env_file: backend/.env
+    environment:
+      DATABASE_URL: postgresql+psycopg://pangandali:${POSTGRES_PASSWORD:-pangandali}@db:5432/pangandali
+      CORS_ORIGINS: http://localhost:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+
+  web:
+    build: .
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+
+volumes:
+  pgdata:

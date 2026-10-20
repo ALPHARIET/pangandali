@@ -9,178 +9,102 @@ import Footer from './components/Footer';
 import InfoPublik from './components/InfoPublik';
 import AuthModal from './components/AuthModal';
 import AdminDashboard from './components/AdminDashboard';
-import DriverVerification from './components/driver/DriverVerification';
 import DriverHome from './components/driver/DriverHome';
-import './components/driver/DriverStyles.css';
-import DistributorVerification from './components/distributor/DistributorVerification';
 import DistributorHome from './components/distributor/DistributorHome';
+import VerifikasiMitra from './components/portal/VerifikasiMitra';
+import { getToken, logout as apiLogout, me } from './api';
+
+// Sesi per peran disimpan untuk komponen lama; sumber kebenarannya token + /api/auth/me.
+const SESSION_KEY = { Driver: 'pangandali_driver_session', Distributor: 'pangandali_distributor_session' };
+const SEMUA_SESI = ['pangandali_session', ...Object.values(SESSION_KEY)];
+
+function bacaSesi() {
+  for (const key of SEMUA_SESI) {
+    try {
+      const raw = localStorage.getItem(key);
+      if (raw) return JSON.parse(raw);
+    } catch {
+      localStorage.removeItem(key);
+    }
+  }
+  return null;
+}
+
+function simpanSesi(u) {
+  SEMUA_SESI.forEach((k) => localStorage.removeItem(k));
+  if (u) localStorage.setItem(SESSION_KEY[u.role] || 'pangandali_session', JSON.stringify(u));
+}
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => (getToken() ? bacaSesi() : null));
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-  // Driver state
-  const [driverUser, setDriverUser] = useState(null);
-
-  // Distributor state
-  const [distributorUser, setDistributorUser] = useState(null);
-
-  // Check if user session exists on mount
+  // Segarkan status akun dari server (mis. setelah admin menyetujui akun mitra).
   useEffect(() => {
-    const savedSession = localStorage.getItem('pangandali_session');
-    if (savedSession) {
-      try {
-        setUser(JSON.parse(savedSession));
-      } catch (e) {
-        console.error('Gagal memuat sesi:', e);
-        localStorage.removeItem('pangandali_session');
-      }
+    if (!getToken()) {
+      simpanSesi(null);
+      return;
     }
-
-    // Check driver session
-    const driverSession = localStorage.getItem('pangandali_driver_session');
-    if (driverSession) {
-      try {
-        setDriverUser(JSON.parse(driverSession));
-      } catch (e) {
-        console.error('Gagal memuat sesi driver:', e);
-        localStorage.removeItem('pangandali_driver_session');
-      }
-    }
-
-    // Check distributor session
-    const distributorSession = localStorage.getItem('pangandali_distributor_session');
-    if (distributorSession) {
-      try {
-        setDistributorUser(JSON.parse(distributorSession));
-      } catch (e) {
-        console.error('Gagal memuat sesi distributor:', e);
-        localStorage.removeItem('pangandali_distributor_session');
-      }
-    }
+    me()
+      .then((u) => {
+        setUser(u);
+        simpanSesi(u);
+      })
+      .catch(() => {
+        apiLogout();
+        simpanSesi(null);
+        setUser(null);
+      });
   }, []);
 
   const handleLoginSuccess = (loggedInUser) => {
-    // Route to appropriate flow based on role
-    if (loggedInUser.role === 'Driver') {
-      setDriverUser(loggedInUser);
-    } else if (loggedInUser.role === 'Distributor') {
-      setDistributorUser(loggedInUser);
-    } else {
-      setUser(loggedInUser);
-    }
+    simpanSesi(loggedInUser);
+    setUser(loggedInUser);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('pangandali_session');
+    apiLogout();
+    simpanSesi(null);
     setUser(null);
   };
 
-  // Driver handlers
-  const handleDriverLogout = () => {
-    localStorage.removeItem('pangandali_driver_session');
-    setDriverUser(null);
+  const handleUserUpdate = (u) => {
+    simpanSesi(u);
+    setUser(u);
   };
 
-  const handleDriverStatusChange = (status) => {
-    if (status === 'approved') {
-      const updatedDriver = { ...driverUser, verificationStatus: 'approved', isFirstLogin: false };
-      setDriverUser(updatedDriver);
-      localStorage.setItem('pangandali_driver_session', JSON.stringify(updatedDriver));
+  const handleCTA = () => setIsAuthModalOpen(true);
+
+  // ─── MITRA LOGISTIK & DISTRIBUTOR ───
+  if (user && (user.role === 'Driver' || user.role === 'Distributor')) {
+    if (user.verification_status !== 'disetujui') {
+      return <VerifikasiMitra user={user} onLogout={handleLogout} onUpdate={handleUserUpdate} />;
     }
-  };
-
-  // Distributor handlers
-  const handleDistributorLogout = () => {
-    localStorage.removeItem('pangandali_distributor_session');
-    setDistributorUser(null);
-  };
-
-  const handleDistributorStatusChange = (status) => {
-    if (status === 'approved') {
-      const updatedDistributor = { ...distributorUser, verificationStatus: 'approved', isFirstLogin: false };
-      setDistributorUser(updatedDistributor);
-      localStorage.setItem('pangandali_distributor_session', JSON.stringify(updatedDistributor));
-    }
-  };
-
-  const handleCTA = () => {
-    if (user) {
-      alert(`Anda telah masuk sebagai ${user.name} (${user.role}). Selamat datang di Dashboard PanganDali!`);
-    } else {
-      setIsAuthModalOpen(true);
-    }
-  };
-
-  // ─── DRIVER FLOW ───
-  if (driverUser) {
-    const docData = localStorage.getItem(`pangandali_driver_docs_${driverUser.email}`);
-    const isVerified = docData ? JSON.parse(docData).status === 'approved' : false;
-    const isFirstLogin = driverUser.isFirstLogin !== false && !isVerified;
-
-    if (isFirstLogin || (docData && JSON.parse(docData).status !== 'approved')) {
-      return (
-        <DriverVerification
-          user={driverUser}
-          onLogout={handleDriverLogout}
-          onStatusChange={handleDriverStatusChange}
-        />
-      );
-    }
-    return <DriverHome user={driverUser} onLogout={handleDriverLogout} />;
+    return user.role === 'Driver'
+      ? <DriverHome user={user} onLogout={handleLogout} />
+      : <DistributorHome user={user} onLogout={handleLogout} />;
   }
 
-  // ─── DISTRIBUTOR FLOW ───
-  if (distributorUser) {
-    const docData = localStorage.getItem(`pangandali_distributor_docs_${distributorUser.email}`);
-    const isVerified = docData ? JSON.parse(docData).status === 'approved' : false;
-    const isFirstLogin = distributorUser.isFirstLogin !== false && !isVerified;
-
-    if (isFirstLogin || (docData && JSON.parse(docData).status !== 'approved')) {
-      return (
-        <DistributorVerification
-          user={distributorUser}
-          onLogout={handleDistributorLogout}
-          onStatusChange={handleDistributorStatusChange}
-        />
-      );
-    }
-    return <DistributorHome user={distributorUser} onLogout={handleDistributorLogout} />;
-  }
-
-  // ─── ADMIN & TPID FLOW ───
+  // ─── ADMIN & TPID ───
   if (user && (user.role === 'Admin' || user.role === 'TPID')) {
-    const isTPID = user.role === 'TPID';
-    return <AdminDashboard user={user} onLogout={handleLogout} isTPID={isTPID} />;
+    return <AdminDashboard user={user} onLogout={handleLogout} isTPID={user.role === 'TPID'} />;
   }
 
-  // ─── DEFAULT LANDING PAGE ───
+  // ─── LANDING PAGE ───
   return (
     <>
-      <Navbar 
-        user={user} 
-        onLogout={handleLogout} 
-        onOpenAuth={() => setIsAuthModalOpen(true)}
-      />
-      
+      <Navbar user={user} onLogout={handleLogout} onOpenAuth={() => setIsAuthModalOpen(true)} />
       <Hero onCTA={handleCTA} />
-      
       <Tantangan />
-      
       <Solusi />
-      
       <CaraKerja />
-      
       <Dampak />
-      
       <InfoPublik />
-      
       <Footer />
-
-      <AuthModal 
-        isOpen={isAuthModalOpen} 
-        onClose={() => setIsAuthModalOpen(false)} 
-        onLoginSuccess={handleLoginSuccess} 
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onLoginSuccess={handleLoginSuccess}
       />
     </>
   );

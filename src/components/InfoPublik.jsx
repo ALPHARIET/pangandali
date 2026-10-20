@@ -56,7 +56,7 @@ function InfoPublik() {
           </span>
           <h2 className="section-title">Informasi Pangan untuk Warga</h2>
           <p className="section-desc">
-            Ringkasan mingguan harga dan pasokan komoditas hortikultura yang dapat diakses warga Kota Bengkulu tanpa perlu login.
+            Contoh ringkasan agregat harga dan pasokan hortikultura yang bisa dibuka warga tanpa login.
           </p>
         </div>
 
@@ -99,7 +99,7 @@ function InfoPublik() {
           </table>
 
           <p className="info-publik-sumber">
-            Ringkasan disusun dari laporan panen tervalidasi dan harga acuan PIHPS, diterbitkan mingguan oleh Dinas Pertanian bersama TPID Kabupaten Rejang Lebong.
+            Rencananya ringkasan disusun dari laporan panen yang sudah divalidasi, terpisah dari data pribadi petani. Ringkasan ini tidak menggantikan survei harga resmi; penerbitan bersama pemerintah daerah menunggu persetujuan resmi.
           </p>
 
           <div className="info-publik-badge">

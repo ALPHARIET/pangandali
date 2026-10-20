@@ -1150,15 +1150,77 @@
   fill: #06b6d4;
 }
 
+/* Tombol menu & laci: hanya muncul di HP/tablet */
+.admin-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.admin-menu-btn,
+.admin-sidebar-close {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #f1f5f9;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.admin-sidebar-close {
+  margin-left: auto;
+  background: transparent;
+  color: #64748b;
+}
+
+.admin-sidebar-backdrop {
+  display: none;
+}
+
 @media (max-width: 992px) {
-  .admin-layout {
-    flex-direction: column;
+  .admin-menu-btn,
+  .admin-sidebar-close {
+    display: inline-flex;
   }
 
   .admin-sidebar {
-    position: static;
-    width: 100%;
-    min-height: auto;
+    width: min(300px, 86vw);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: none;
+    z-index: 1100;
+  }
+
+  .admin-sidebar-logo {
+    margin-bottom: 20px;
+  }
+
+  .menu-open .admin-sidebar {
+    transform: translateX(0);
+    box-shadow: 0 0 40px rgba(15, 23, 42, 0.18);
+  }
+
+  .admin-sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.4);
+    z-index: 1050;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .menu-open .admin-sidebar-backdrop {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .admin-main {
@@ -1166,23 +1228,17 @@
   }
 
   .admin-topbar {
-    height: auto;
-    min-height: 70px;
-    align-items: flex-start;
-    flex-direction: column;
+    height: 60px;
+    padding: 0 20px;
     gap: 12px;
-    padding: 16px 24px;
   }
 
   .topbar-actions {
-    width: 100%;
-    flex-wrap: wrap;
     gap: 12px;
   }
 
   .admin-search-box {
-    flex: 1 1 240px;
-    width: auto;
+    width: 200px;
   }
 
   .distribution-map-grid {
@@ -1191,8 +1247,34 @@
 }
 
 @media (max-width: 640px) {
+  .admin-topbar {
+    padding: 0 16px;
+  }
+
+  .admin-search-box,
+  .instansi-badge {
+    display: none;
+  }
+
+  .breadcrumb {
+    font-size: 13px;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  /* Di HP cukup tampilkan halaman aktif */
+  .breadcrumb > :not(.breadcrumb-active) {
+    display: none;
+  }
+
+  .breadcrumb-active {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .admin-content {
-    padding: 20px;
+    padding: 16px;
   }
 
   .panel-header,

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Users, Gauge, BarChart3 } from 'lucide-react';
+import { MessageSquare, Gauge } from 'lucide-react';
 
-function AnimatedNumber({ value, suffix = '' }) {
+function AnimatedNumber({ value, prefix = '', suffix = '' }) {
   const [display, setDisplay] = useState('0');
   const ref = useRef(null);
   const hasAnimated = useRef(false);
@@ -21,7 +21,7 @@ function AnimatedNumber({ value, suffix = '' }) {
             // Ease out cubic
             const eased = 1 - Math.pow(1 - progress, 3);
             const currentValue = Math.floor(numericValue * eased);
-            setDisplay(currentValue.toLocaleString() + suffix);
+            setDisplay(prefix + currentValue.toLocaleString() + suffix);
 
             if (progress < 1) {
               requestAnimationFrame(animate);
@@ -36,7 +36,7 @@ function AnimatedNumber({ value, suffix = '' }) {
 
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
-  }, [value, suffix]);
+  }, [value, prefix, suffix]);
 
   return <div className="stat-num" ref={ref}>{display}</div>;
 }
@@ -48,26 +48,26 @@ function Dampak() {
         <div className="dampak-banner">
           <div className="dampak-grid">
             <div className="dampak-title-box">
-              <h3>Dampak Nyata PanganDali</h3>
+              <h3>Target Uji Pilot</h3>
               <p>
-                Membangun ketahanan pangan melalui efisiensi operasional dan pemberdayaan komunitas akar rumput.
+                Uji awal diusulkan pada 10–20 petani, 2–3 pembeli, dan 2–3 armada untuk satu sampai dua komoditas, atas persetujuan mitra.
               </p>
             </div>
             
             <div className="dampak-stat">
-              <Users size={20} className="dampak-stat-icon" />
-              <AnimatedNumber value="300" suffix="+" />
-              <div className="stat-label">Petani Terlibat (Target Pilot)</div>
+              <MessageSquare size={20} className="dampak-stat-icon" />
+              <AnimatedNumber value="85" prefix="≥" suffix="%" />
+              <div className="stat-label">Ketepatan Ekstraksi Pesan (Target)</div>
             </div>
             
             <div className="dampak-stat">
               <Gauge size={20} className="dampak-stat-icon" />
-              <AnimatedNumber value="60" suffix="%" />
-              <div className="stat-label">Utilisasi Backhaul (Target ≥60%)</div>
+              <AnimatedNumber value="60" prefix="≥" suffix="%" />
+              <div className="stat-label">Perjalanan Balik Berisi Muatan (Target)</div>
             </div>
           </div>
             <p style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', marginTop: '16px', textAlign: 'center', fontStyle: 'italic' }}>
-              Angka di atas merupakan target indikator pilot, bukan capaian yang sudah terjadi.
+              Angka di atas adalah target uji yang diusulkan, bukan capaian. Penghematan BBM dan susut dilaporkan setelah diukur, termasuk bila hasilnya negatif.
             </p>
         </div>
       </div>

@@ -1,0 +1,19 @@
+{
+  "name": "pangandali-wa-bridge",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Jembatan WhatsApp (Baileys, scan QR) ke backend PanganDali. Tidak resmi: hanya untuk uji lokal/demo.",
+  "type": "module",
+  "main": "index.mjs",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "7.0.0-rc14",
+    "pino": "9.7.0",
+    "qrcode": "1.5.4"
+  }
+}
