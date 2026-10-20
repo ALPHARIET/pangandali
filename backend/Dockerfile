@@ -11,5 +11,6 @@ RUN useradd --create-home pangandali && chown -R pangandali /app
 USER pangandali
 
 EXPOSE 8000
-# Migrasi dulu, lalu jalankan API.
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers"]
+# Migrasi, buat admin (dan data demo bila SEED_DEMO=1) secara idempoten, lalu jalankan API.
+# Seed tidak menggagalkan start bila ADMIN_PASSWORD belum diisi. PORT diisi platform (mis. Render).
+CMD ["sh", "-c", "alembic upgrade head && (python -m app.seed ${SEED_DEMO:+--demo} || echo 'seed dilewati') && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers --forwarded-allow-ips='*'"]

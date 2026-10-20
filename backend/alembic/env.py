@@ -8,7 +8,8 @@ from app.config import get_settings
 from app.db import Base
 
 config = context.config
-config.set_main_option("sqlalchemy.url", get_settings().resolved_database_url)
+# "%" di password (URL-encoded) harus di-escape untuk configparser.
+config.set_main_option("sqlalchemy.url", get_settings().resolved_database_url.replace("%", "%%"))
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 

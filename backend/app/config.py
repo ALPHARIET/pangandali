@@ -72,6 +72,10 @@ class Settings(BaseSettings):
         prefix = "sqlite:///./"
         if self.database_url.startswith(prefix):
             return f"sqlite:///{(BACKEND_DIR / self.database_url[len(prefix):]).as_posix()}"
+        # Connection string Neon/Render berawalan postgres:// atau postgresql://; driver yang terpasang psycopg 3.
+        for awal in ("postgres://", "postgresql://"):
+            if self.database_url.startswith(awal):
+                return "postgresql+psycopg://" + self.database_url[len(awal):]
         return self.database_url
 
     @property
