@@ -12,7 +12,7 @@ from app.channels.simulator import SimulatorChannel
 from app.config import Settings, get_settings
 from app.llm.client import OpenAICompatClient
 from app.messaging import conversation_for, kirim, kirim_ulang_tertunda
-from app.models import AuditLog, LaporanPanen, Message, Petani
+from app.models import AuditLog, LaporanPanen, Message, Petani, User
 from app.operasional import get_operasional
 from app.routers import webhook
 from app.settings_store import LLMConfig, llm_config
@@ -200,3 +200,20 @@ def test_wa_web_bridge_masuk_dan_keluar(client, db, monkeypatch):
         assert msg.channel == "whatsapp_web" and msg.send_status == "terkirim"
     finally:
         set_channel("whatsapp_web", WhatsAppWebChannel())
+
+
+def test_seed_menyamakan_password_dengan_env(db, monkeypatch):
+    from app.seed import seed_admin, set_demo_password
+    from app.security import verify_password
+
+    s = get_settings()
+    monkeypatch.setattr(s, "admin_password", "password-baru-123")
+    monkeypatch.setattr(s, "demo_password", "demo-baru-123")
+    assert "disamakan" in seed_admin(db)
+    assert set_demo_password(db, wajib=False)
+    db.commit()
+    admin = db.scalar(select(User).where(User.email == s.admin_email))
+    andi = db.scalar(select(User).where(User.email == "driver.demo@pangandali.id"))
+    assert verify_password("password-baru-123", admin.password_hash)
+    assert verify_password("demo-baru-123", andi.password_hash)
+    assert seed_admin(db).endswith("sudah ada."), "tidak diubah lagi bila sudah sama"

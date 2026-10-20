@@ -15,14 +15,19 @@ from .config import get_settings
 from .db import SessionLocal
 from .models import Harga, Jarak, Lokasi, Perjalanan, Petani, User
 from .normalize import hari_ini
-from .security import hash_password
+from .security import hash_password, verify_password
 
 LABEL_CONTOH = "DATA CONTOH demo - ganti dengan data terverifikasi"
 
 
 def seed_admin(db: Session) -> str:
     s = get_settings()
-    if db.scalar(select(User).where(User.email == s.admin_email.lower())):
+    admin = db.scalar(select(User).where(User.email == s.admin_email.lower()))
+    if admin is not None:
+        # ADMIN_PASSWORD di env jadi acuan: bila diganti, password akun ikut diperbarui saat start berikutnya.
+        if len(s.admin_password) >= 8 and not verify_password(s.admin_password, admin.password_hash):
+            admin.password_hash = hash_password(s.admin_password)
+            return f"Admin {s.admin_email} sudah ada; password disamakan dengan ADMIN_PASSWORD."
         return f"Admin {s.admin_email} sudah ada."
     if len(s.admin_password) < 8:
         raise SystemExit("ADMIN_PASSWORD wajib diisi (min. 8 karakter) di .env sebelum seed.")
@@ -107,14 +112,17 @@ def seed_demo(db: Session) -> list[str]:
     return log
 
 
-def set_demo_password(db: Session) -> list[str]:
+def set_demo_password(db: Session, wajib: bool = True) -> list[str]:
     pw = get_settings().demo_password
     if len(pw) < 8:
-        raise SystemExit("Isi DEMO_PASSWORD (min. 8 karakter) di backend/.env dulu.")
+        if wajib:
+            raise SystemExit("Isi DEMO_PASSWORD (min. 8 karakter) di backend/.env dulu.")
+        return ["DEMO_PASSWORD belum diisi (min. 8 karakter); password akun demo tidak diubah."]
     rows = db.scalars(select(User).where(User.email.like("%.demo@pangandali.id"))).all()
-    for u in rows:
+    diubah = [u for u in rows if not verify_password(pw, u.password_hash)]
+    for u in diubah:
         u.password_hash = hash_password(pw)
-    return [f"password demo diperbarui: {u.email}" for u in rows]
+    return [f"password demo disamakan dengan DEMO_PASSWORD: {u.email}" for u in diubah]
 
 
 def main() -> None:
@@ -127,8 +135,9 @@ def main() -> None:
         if args.demo:
             for line in seed_demo(db):
                 print(line)
-        if args.set_demo_password:
-            for line in set_demo_password(db):
+        if args.set_demo_password or args.demo:
+            # Dengan --demo, password akun demo ikut disamakan dengan DEMO_PASSWORD bila diisi.
+            for line in set_demo_password(db, wajib=args.set_demo_password):
                 print(line)
         db.commit()
 
