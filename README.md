@@ -52,4 +52,4 @@ npm run build
 
 ## Lisensi
 
-Dibuat untuk keperluan lomba GEMASTIK XIX. Hak cipta © 2024–2026 Tim PanganDali.
+Dibuat untuk keperluan lomba neon. Hak cipta © 2024–2026 Tim PanganDali.
