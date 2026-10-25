@@ -1,34 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import {
-  LogOut, ArrowRight, Package, DollarSign, Bell,
-  Calendar, Shield, Route, Search, CheckCircle, Upload,
-  Clock, ChevronDown, Heart, FileText,
-  TrendingUp, Workflow, HelpCircle, Zap, Store, Truck
+  ArrowRight, Package, DollarSign, Shield, Search, Workflow, HelpCircle, Store, Truck, MapPin,
 } from 'lucide-react';
-
-/* ─── Scroll-reveal hook ─── */
-function useScrollReveal(selector) {
-  const ref = useRef(null);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
-    );
-    const items = ref.current?.querySelectorAll(selector);
-    items?.forEach((item, i) => {
-      item.style.animationDelay = `${i * 0.1}s`;
-      observer.observe(item);
-    });
-    return () => observer.disconnect();
-  }, [selector]);
-  return ref;
-}
+import { PortalBar, PortalHero, SectionHead, BenefitGrid, StepList, FaqList, PortalFooter } from '../portal/PortalParts';
+import DistributorTransaksi from './DistributorTransaksi';
 
 /* ─── SVG Illustrations ─── */
 const MarketIllustration = () => (
@@ -86,437 +61,135 @@ const DistributionDiagram = () => (
 /* ─── FAQ Data ─── */
 const faqData = [
   {
-    q: 'Darimana asal pasokan komoditas yang saya dapatkan?',
-    a: 'Komoditas dipasok langsung dari kelompok tani binaan pemerintah daerah yang terverifikasi, memastikan kualitas segar langsung dari lahan panen.'
+    q: 'Dari mana asal stok yang ditampilkan?',
+    a: 'Dari laporan panen petani terdaftar yang sudah dikonfirmasi petani dan divalidasi admin. Laporan yang belum lengkap, misalnya satuan lokal tanpa kesepakatan kg, belum masuk stok.'
   },
   {
-    q: 'Apakah harga sudah termasuk biaya pengiriman?',
-    a: 'Harga yang diinformasikan oleh sistem adalah harga di tingkat petani (farm-gate price). Biaya pengiriman via armada backhaul akan dihitungkan secara terpisah dengan tarif kompetitif pada saat Invoice terbit.'
+    q: 'Bagaimana harga dan pembayarannya?',
+    a: 'Harga di stok adalah harga harapan petani; Anda boleh mengajukan harga tawar. Harga akhir dan pembayaran disepakati serta dilakukan langsung antara Anda dan petani. PanganDali bukan penyedia layanan keuangan, hanya mencatat pesanan dan status pengiriman.'
   },
   {
     q: 'Bagaimana prosedur pemesanannya?',
-    a: 'Cukup pilih komoditas di bagian Stok Tervalidasi, ajukan volume permintaan, dan sistem akan mereservasi stok untuk Anda. Setelah PO terbit, Anda dapat mengunggah bukti bayar langsung di platform.'
+    a: 'Pilih komoditas dan ajukan volume. Volume itu dikunci sementara agar tidak dipesan ganda, lalu petani menerima atau menolak. Jika petani tidak menjawab sampai batas waktu, kunci dilepas dan stok kembali tersedia.'
   },
   {
-    q: 'Berapa minimal pemesanan (MOQ)?',
-    a: 'Minimal pemesanan disesuaikan dengan kapasitas kendaraan backhaul terkecil, biasanya mulai dari 500 kg hingga kapasitas truk besar, tergantung komoditas dan ketersediaan armada.'
+    q: 'Bagaimana pengirimannya diatur?',
+    a: 'Pesanan yang diterima petani menjadi order angkutan. Sistem merekomendasikan armada yang searah sesuai kapasitas, komoditas, rute, dan waktu. Armada baru ditugaskan setelah mitra logistik setuju; ongkos angkut disepakati dengan mitra.'
+  },
+  {
+    q: 'Apa yang dicatat saat barang tiba?',
+    a: 'Berat diterima, berat yang ditolak karena mutu beserta alasannya, dan waktu terima. Data ini dipakai untuk menghitung susut distribusi.'
   },
 ];
 
 /* ─── Benefits Data ─── */
 const benefits = [
-  { icon: <Store size={22} />, title: 'Pasokan Stabil', desc: 'Dapatkan prioritas pasokan pangan langsung dari sentra produksi terverifikasi.', color: 'rgba(59,130,246,0.1)', iconColor: '#2563eb' },
-  { icon: <DollarSign size={22} />, title: 'Harga Kompetitif', desc: 'Memotong rantai pasok panjang, dapatkan harga tangan pertama dari petani.', color: 'rgba(34,197,94,0.08)', iconColor: '#16a34a' },
-  { icon: <Truck size={22} />, title: 'Pengiriman Efisien', desc: 'Didukung oleh jaringan armada backhaul dengan biaya logistik yang lebih murah.', color: 'rgba(245,158,11,0.08)', iconColor: '#d97706' },
-  { icon: <Shield size={22} />, title: 'Kualitas Terjamin', desc: 'Bekerja sama dengan petani binaan untuk menjamin standar kualitas komoditas.', color: 'rgba(99,102,241,0.08)', iconColor: '#6366f1' },
+  { icon: <Store size={22} />, title: 'Stok Tervalidasi', desc: 'Hasil panen yang sudah dicek petugas, lengkap dengan volume, lokasi, dan tanggal panen.', color: 'rgba(59,130,246,0.1)', iconColor: '#2563eb' },
+  { icon: <DollarSign size={22} />, title: 'Harga Tercatat', desc: 'Harga harapan petani dan harga tawar Anda tercatat; harga akhir disepakati antarpihak.', color: 'rgba(34,197,94,0.08)', iconColor: '#16a34a' },
+  { icon: <Truck size={22} />, title: 'Angkutan Searah', desc: 'Pengiriman dicarikan dari armada yang sudah berjalan di rute yang sama.', color: 'rgba(245,158,11,0.08)', iconColor: '#d97706' },
+  { icon: <Shield size={22} />, title: 'Penerimaan Tercatat', desc: 'Berat diterima dan alasan tolak mutu dicatat saat barang tiba.', color: 'rgba(99,102,241,0.08)', iconColor: '#6366f1' },
 ];
 
 const timeline = [
-  { num: 1, title: 'Ajukan Permintaan', desc: 'Pilih komoditas dari stok tervalidasi dan ajukan volume.', color: '#3b82f6' },
-  { num: 2, title: 'Reserve Volume', desc: 'Sistem me-reserve stok otomatis untuk pesanan Anda.', color: '#22c55e' },
-  { num: 3, title: 'PO Digital & Invoice', desc: 'Dapatkan dokumen PO dan Invoice resmi dari sistem.', color: '#f59e0b' },
-  { num: 4, title: 'Pembayaran', desc: 'Unggah bukti transfer pembayaran ke rekening petani.', color: '#6366f1' },
-  { num: 5, title: 'Konfirmasi Petani', desc: 'Petani mengonfirmasi penerimaan dana via chatbot WhatsApp. Admin berperan sebagai fallback jika petani tidak merespons.', color: '#ec4899' },
-  { num: 6, title: 'Pengiriman', desc: 'Komoditas dikirim via armada backhaul setelah transaksi lunas.', color: '#10b981' },
+  { num: 1, title: 'Lihat Stok Tervalidasi', desc: 'Stok berasal dari laporan panen yang sudah divalidasi admin.', color: '#3b82f6' },
+  { num: 2, title: 'Ajukan Pembelian', desc: 'Volume yang Anda minta dikunci sementara agar tidak dipesan ganda.', color: '#22c55e' },
+  { num: 3, title: 'Petani Menjawab', desc: 'Petani menerima atau menolak lewat WhatsApp. Tanpa jawaban, kunci dilepas.', color: '#f59e0b' },
+  { num: 4, title: 'Armada Direkomendasikan', desc: 'Armada searah ditawarkan satu per satu dan baru ditugaskan setelah mitra setuju.', color: '#6366f1' },
+  { num: 5, title: 'Pembayaran Antarpihak', desc: 'Pembayaran dilakukan langsung dengan petani sesuai kesepakatan.', color: '#ec4899' },
+  { num: 6, title: 'Barang Diterima', desc: 'Berat terima dan tolak mutu dicatat untuk menghitung susut.', color: '#10b981' },
 ];
 
-const infoCards = [
-  { icon: <Search size={22} />, title: 'Komoditas Unggulan', value: 'Kubis, Terung, Wortel, Kembang Kol, Cabai Besar', color: 'rgba(239,68,68,0.08)', iconColor: '#dc2626' },
-  { icon: <Package size={22} />, title: 'Kapasitas Suplai', value: 'Sesuai pesanan (Grosir)', color: 'rgba(34,197,94,0.08)', iconColor: '#16a34a' },
-  { icon: <Route size={22} />, title: 'Area Layanan', value: 'Kabupaten Rejang Lebong - Kota Bengkulu (Pilot)', color: 'rgba(59,130,246,0.08)', iconColor: '#2563eb' },
+const LINKS = [
+  ['#transaksi', 'Stok & Pesanan'],
+  ['#program', 'Ekosistem'],
+  ['#alur', 'Alur Pengadaan'],
+  ['#faq', 'Bantuan'],
 ];
 
-const dummyStock = [
-  { id: 1, name: 'Cabai Besar', stock: 1200, unit: 'Kg', price: 25000 },
-  { id: 2, name: 'Kubis', stock: 4500, unit: 'Kg', price: 4000 },
-  { id: 3, name: 'Wortel', stock: 800, unit: 'Kg', price: 6000 },
-  { id: 4, name: 'Terung', stock: 1500, unit: 'Kg', price: 5000 },
-  { id: 5, name: 'Kembang Kol', stock: 650, unit: 'Kg', price: 8000 },
+const FACTS = [
+  { icon: <Search size={16} />, label: 'Komoditas uji', value: 'Hortikultura (mis. kubis, cabai besar)' },
+  { icon: <MapPin size={16} />, label: 'Area layanan', value: 'Rejang Lebong – Kota Bengkulu' },
+  { icon: <Package size={16} />, label: 'Volume', value: 'Mengikuti stok tervalidasi' },
+  { icon: <Truck size={16} />, label: 'Pengiriman', value: 'Armada searah (muatan balik)' },
 ];
 
 function DistributorHome({ user, onLogout }) {
-  const [scrolled, setScrolled] = useState(false);
-  const [openFaq, setOpenFaq] = useState(null);
-
-  // Transaction States
-  const [selectedStock, setSelectedStock] = useState('');
-  const [requestVol, setRequestVol] = useState('');
-  const [transactionState, setTransactionState] = useState('idle'); // idle, reserved, po, invoice, waiting_farmer, waiting_admin_fallback, verified
-
-  const benefitsRef = useScrollReveal('.driver-benefit-card');
-  const timelineRef = useScrollReveal('.driver-timeline__item');
-  const infoRef = useScrollReveal('.driver-info-card');
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const distributorName = user?.name || 'Distributor';
-
-  const handleRequest = () => {
-    if (!selectedStock || !requestVol) return alert("Pilih komoditas dan volume terlebih dahulu");
-    setTransactionState('reserved');
-    setTimeout(() => {
-      setTransactionState('po');
-    }, 1500);
-  };
-
-  const handleUpload = () => {
-    setTransactionState('waiting_farmer');
-    // Simulate farmer WhatsApp confirmation after delay
-    setTimeout(() => {
-      setTransactionState('verified');
-      alert("Petani telah mengonfirmasi penerimaan dana via WhatsApp. Status transaksi: LUNAS.");
-    }, 3000);
-  };
-
-  const handleAdminFallback = () => {
-    setTransactionState('waiting_admin_fallback');
-    setTimeout(() => {
-      setTransactionState('verified');
-      alert("Admin (Dinas Pertanian) telah memverifikasi transaksi sebagai mekanisme cadangan (fallback). Status: LUNAS.");
-    }, 2000);
-  };
+  const distributorName = user?.nama_usaha || user?.name || 'Distributor';
 
   return (
-    <div style={{ '--primary': '#3b82f6', '--primary-dark': '#1d4ed8' }}>
-      {/* ════════════════ NAVBAR ════════════════ */}
-      <nav className={`driver-nav ${scrolled ? 'scrolled' : ''}`}>
-        <div className="driver-nav__inner">
-          <div className="driver-nav__brand">
-            <div className="driver-nav__brand-icon" style={{ background: 'var(--primary)' }}>PD</div>
-            <span>PanganDali</span>
-          </div>
-          <div className="driver-nav__right">
-            <div className="driver-nav__user">
-              <span className="driver-nav__user-name">{distributorName}</span>
-              <div className="driver-nav__user-avatar" style={{ background: 'rgba(59,130,246,0.1)', color: '#1d4ed8' }}>
-                {distributorName.substring(0, 2).toUpperCase()}
-              </div>
-            </div>
-            <button className="driver-nav__logout" onClick={onLogout} title="Keluar">
-              <LogOut size={18} />
-            </button>
-          </div>
-        </div>
-      </nav>
+    <div className="portal portal--blue">
+      <PortalBar role="Mitra Distributor" user={user} links={LINKS} onLogout={onLogout} />
 
-      {/* ════════════════ HERO ════════════════ */}
-      <header className="driver-hero">
-        <div className="driver-hero__container">
-          <div className="driver-hero__content">
-            <span className="driver-hero__badge" style={{ background: 'rgba(59,130,246,0.1)', color: '#1d4ed8' }}>
-              <Store size={14} />
-              Mitra Distributor Terdaftar
-            </span>
-            <h1 className="driver-hero__greeting">
-              Halo, {distributorName} <span className="wave">👋</span>
-            </h1>
-            <p className="driver-hero__subtitle">
-              Amankan pasokan komoditas pangan untuk usaha Anda. Dapatkan suplai langsung dari sentra produksi dengan harga terbaik.
-            </p>
-            <a 
-              href="#transaksi" 
-              className="driver-hero__cta"
-              style={{ background: 'var(--primary)', boxShadow: '0 4px 14px rgba(59,130,246,0.3)', textDecoration: 'none' }}
-            >
-              Lihat Stok & Buat Permintaan
-              <ArrowRight size={20} />
+      <PortalHero
+        chip={<><Store size={14} /> Mitra Distributor Terdaftar</>}
+        title={<>Halo, {distributorName}.</>}
+        lead="Lihat stok hasil panen yang sudah divalidasi, ajukan pembelian, lalu pantau sampai barang diangkut armada yang searah. Pembayaran tetap dilakukan langsung dengan petani."
+        actions={
+          <>
+            <a href="#transaksi" className="p-btn p-btn--primary">
+              Lihat stok & pesan <ArrowRight size={18} />
             </a>
-          </div>
-          <div className="driver-hero__illust">
-            <MarketIllustration />
-          </div>
-        </div>
-      </header>
+            <a href="#alur" className="p-btn p-btn--ghost">Alur pengadaan</a>
+          </>
+        }
+        art={<MarketIllustration />}
+        facts={FACTS}
+      />
 
-      {/* ════════════════ TENTANG DISTRIBUTOR ════════════════ */}
-      <section className="driver-section driver-section--alt">
-        <div className="container">
-          <div className="driver-about__grid">
-            <div className="driver-about__text">
-              <span className="section-label" style={{ background: 'rgba(59,130,246,0.1)', color: '#1d4ed8' }}>
-                <Package size={14} />
-                Ekosistem Distribusi
-              </span>
-              <h2>Suplai Langsung dari <em style={{ color: '#1d4ed8', fontStyle: 'italic' }}>Sumbernya</em></h2>
-              <p style={{ marginTop: 16 }}>
-                Sebagai mitra distributor resmi, Anda mendapatkan akses langsung ke jaringan petani binaan kami yang sedang memasuki masa panen.
+      {/* ═════ Stok & transaksi ═════ */}
+      <section id="transaksi" className="portal-section">
+        <div className="portal-wrap">
+          <SectionHead
+            icon={<Store size={14} />}
+            eyebrow="Stok & Pesanan"
+            title="Stok tervalidasi dan permintaan"
+            desc="Volume yang Anda ajukan dikunci sementara sampai petani menerima atau menolak pesanan."
+          />
+
+          <DistributorTransaksi />
+        </div>
+      </section>
+
+      {/* ═════ Ekosistem ═════ */}
+      <section id="program" className="portal-section portal-section--white">
+        <div className="portal-wrap">
+          <div className="portal-about">
+            <div>
+              <SectionHead icon={<Package size={14} />} eyebrow="Ekosistem distribusi" title="Satu aliran data dari panen ke gudang" />
+              <p>
+                Stok yang Anda lihat berasal dari laporan panen petani terdaftar yang sudah dikonfirmasi petani dan divalidasi admin,
+                lengkap dengan volume dan tanggal panennya.
               </p>
-              <p style={{ marginTop: 12 }}>
-                Sistem PanganDali memfasilitasi pertemuan antara pasokan (petani) dengan permintaan (gudang Anda) serta mengurus pengirimannya melalui program armada backhaul, memastikan Anda mendapatkan komoditas segar dengan biaya logistik yang ditekan seminimal mungkin.
+              <p>
+                Pesanan yang diterima petani diteruskan menjadi order angkutan untuk armada yang sudah berjalan di rute yang sama.
+                Jarak, BBM, dan susut tiap kiriman dicatat agar efisiensinya bisa diukur.
               </p>
             </div>
-            <div className="driver-about__illust">
+            <div className="portal-about__art" aria-hidden="true">
               <DistributionDiagram />
             </div>
           </div>
+          <BenefitGrid items={benefits} />
         </div>
       </section>
 
-      {/* ════════════════ KEUNTUNGAN ════════════════ */}
-      <section className="driver-section">
-        <div className="container">
-          <div className="section-title-wrapper">
-            <span className="section-label" style={{ background: 'rgba(59,130,246,0.1)', color: '#1d4ed8' }}>
-              <Zap size={14} />
-              Keuntungan
-            </span>
-            <h2 className="section-title">Nilai Lebih Untuk Bisnis Anda</h2>
-            <p className="section-desc">
-              Kolaborasi langsung dengan sistem pengendalian pangan daerah memberikan banyak keuntungan.
-            </p>
-          </div>
-
-          <div className="driver-benefits__grid" ref={benefitsRef}>
-            {benefits.map((b, idx) => (
-              <div className="driver-benefit-card" key={idx}>
-                <div
-                  className="driver-benefit-card__icon"
-                  style={{ background: b.color, color: b.iconColor }}
-                >
-                  {b.icon}
-                </div>
-                <h3 className="driver-benefit-card__title">{b.title}</h3>
-                <p className="driver-benefit-card__desc">{b.desc}</p>
-              </div>
-            ))}
-          </div>
+      {/* ═════ Alur ═════ */}
+      <section id="alur" className="portal-section">
+        <div className="portal-wrap">
+          <SectionHead icon={<Workflow size={14} />} eyebrow="Alur pengadaan" title="Proses pengadaan komoditas" desc="Dari stok tervalidasi sampai barang diterima." />
+          <StepList steps={timeline} />
         </div>
       </section>
 
-      {/* ════════════════ CARA KERJA ════════════════ */}
-      <section className="driver-section driver-section--alt">
-        <div className="container">
-          <div className="section-title-wrapper">
-            <span className="section-label" style={{ background: 'rgba(59,130,246,0.1)', color: '#1d4ed8' }}>
-              <Workflow size={14} />
-              Alur Pengadaan
-            </span>
-            <h2 className="section-title">Proses Pengadaan Komoditas</h2>
-            <p className="section-desc">
-              Sederhana, transparan, dan efisien untuk menjaga pasokan gudang Anda.
-            </p>
-          </div>
-
-          <div className="driver-timeline" ref={timelineRef}>
-            <div className="driver-timeline__line" />
-            {timeline.map((step) => (
-              <div className="driver-timeline__item" key={step.num}>
-                <div className="driver-timeline__num" style={{ borderColor: step.color }}>
-                  {step.num}
-                </div>
-                <div className="driver-timeline__content">
-                  <h3 className="driver-timeline__title">{step.title}</h3>
-                  <p className="driver-timeline__desc">{step.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* ═════ FAQ ═════ */}
+      <section id="faq" className="portal-section portal-section--white">
+        <div className="portal-wrap">
+          <SectionHead icon={<HelpCircle size={14} />} eyebrow="Bantuan" title="Pertanyaan seputar pasokan" />
+          <FaqList items={faqData} />
         </div>
       </section>
 
-      {/* ════════════════ TRANSAKSI & STOK ════════════════ */}
-      <section id="transaksi" className="driver-section">
-        <div className="container">
-          <div className="section-title-wrapper">
-            <span className="section-label" style={{ background: 'rgba(34,197,94,0.1)', color: '#16a34a' }}>
-              <Store size={14} />
-              Live Dashboard
-            </span>
-            <h2 className="section-title">Stok Tervalidasi & Transaksi</h2>
-            <p className="section-desc">
-              Ajukan permintaan komoditas langsung dari stok terverifikasi.
-            </p>
-          </div>
-
-          <div className="driver-about__grid" style={{ alignItems: 'flex-start' }}>
-            <div className="bi-card">
-              <h3 className="bi-section-title"><Package size={18} /> Stok Hari Ini (Estimasi Simulasi)</h3>
-              <table className="bi-table" style={{ marginTop: '16px' }}>
-                <thead>
-                  <tr>
-                    <th>Komoditas</th>
-                    <th>Volume Tersedia</th>
-                    <th>Harga (Rp/Kg)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {dummyStock.map(s => (
-                    <tr key={s.id}>
-                      <td><strong>{s.name}</strong></td>
-                      <td style={{ color: '#2563eb' }}>{s.stock} {s.unit}</td>
-                      <td>Rp {s.price.toLocaleString()}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="bi-card" style={{ borderLeft: '4px solid #3b82f6' }}>
-              <h3 className="bi-section-title"><Store size={18} /> Buat Permintaan</h3>
-              
-              {transactionState === 'idle' && (
-                <div style={{ marginTop: '16px' }}>
-                  <div className="form-group">
-                    <label className="driver-verify__field-label">Pilih Komoditas</label>
-                    <select className="driver-verify__input" value={selectedStock} onChange={(e) => setSelectedStock(e.target.value)}>
-                      <option value="">-- Pilih --</option>
-                      {dummyStock.map(s => (
-                        <option key={s.id} value={s.id}>{s.name} (Tersedia: {s.stock} {s.unit})</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="form-group" style={{ marginTop: '12px' }}>
-                    <label className="driver-verify__field-label">Volume Permintaan (Kg)</label>
-                    <input type="number" className="driver-verify__input" placeholder="Misal: 500" value={requestVol} onChange={(e) => setRequestVol(e.target.value)} />
-                  </div>
-                  <button className="btn btn-primary" style={{ width: '100%', marginTop: '16px' }} onClick={handleRequest}>Ajukan Permintaan</button>
-                </div>
-              )}
-
-              {transactionState === 'reserved' && (
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                  <Clock size={40} color="#f59e0b" style={{ margin: '0 auto', display: 'block', animation: 'spin 2s linear infinite' }} />
-                  <h4 style={{ marginTop: '12px' }}>Sistem Sedang Me-reserve Stok...</h4>
-                  <p style={{ fontSize: '13px', color: '#64748b' }}>Mohon tunggu sebentar, kami sedang memverifikasi ketersediaan.</p>
-                </div>
-              )}
-
-              {transactionState === 'po' && (
-                <div style={{ marginTop: '20px' }}>
-                  <div style={{ background: '#dcfce7', padding: '16px', borderRadius: '8px', border: '1px solid #bbf7d0', marginBottom: '16px' }}>
-                    <h4 style={{ color: '#16a34a', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <CheckCircle size={18} /> Volume Berhasil Direservasi!
-                    </h4>
-                    <p style={{ fontSize: '13px', color: '#14532d', marginTop: '4px' }}>
-                      PO Digital & Invoice #INV-{Math.floor(Math.random() * 10000)} telah diterbitkan.
-                    </p>
-                  </div>
-                  <div className="form-group">
-                    <label className="driver-verify__field-label">Unggah Bukti Transfer Pembayaran</label>
-                    <div style={{ border: '2px dashed #cbd5e1', padding: '20px', textAlign: 'center', borderRadius: '8px', background: '#f8fafc', cursor: 'pointer' }} onClick={handleUpload}>
-                      <Upload size={24} color="#64748b" style={{ margin: '0 auto', display: 'block' }} />
-                      <span style={{ fontSize: '13px', color: '#64748b', marginTop: '8px', display: 'block' }}>Klik untuk memilih file foto/PDF</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {transactionState === 'waiting_farmer' && (
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                  <Clock size={40} color="#ec4899" style={{ margin: '0 auto', display: 'block' }} />
-                  <h4 style={{ marginTop: '12px' }}>Menunggu Konfirmasi Petani via WhatsApp</h4>
-                  <p style={{ fontSize: '13px', color: '#64748b' }}>Bukti bayar berhasil diunggah. Sistem mengirimkan notifikasi ke petani melalui chatbot WhatsApp untuk mengonfirmasi penerimaan dana.</p>
-                  <div style={{ marginTop: '16px', padding: '12px', background: '#fdf4ff', borderRadius: '8px', border: '1px solid #f0abfc', fontSize: '12px', color: '#86198f' }}>
-                    <strong>Alur Proposal:</strong> Petani mengonfirmasi penerimaan dana → Status menjadi <em>Lunas</em>. Jika petani tidak merespons dalam batas waktu, admin dapat memverifikasi sebagai mekanisme cadangan (fallback).
-                  </div>
-                  <button className="btn btn-outline" style={{ marginTop: '12px', fontSize: '12px' }} onClick={handleAdminFallback}>Verifikasi Manual oleh Admin (Fallback)</button>
-                </div>
-              )}
-
-              {transactionState === 'waiting_admin_fallback' && (
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                  <Clock size={40} color="#6366f1" style={{ margin: '0 auto', display: 'block' }} />
-                  <h4 style={{ marginTop: '12px' }}>Menunggu Verifikasi Admin (Fallback)</h4>
-                  <p style={{ fontSize: '13px', color: '#64748b' }}>Admin (Dinas Pertanian) sedang memverifikasi transaksi sebagai mekanisme cadangan karena petani belum merespons.</p>
-                </div>
-              )}
-
-              {transactionState === 'verified' && (
-                <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                  <CheckCircle size={48} color="#10b981" style={{ margin: '0 auto', display: 'block' }} />
-                  <h4 style={{ marginTop: '12px', color: '#10b981' }}>Transaksi Lunas!</h4>
-                  <p style={{ fontSize: '13px', color: '#64748b' }}>Pembayaran telah dikonfirmasi. Armada logistik backhaul sedang disiapkan untuk pengiriman ke gudang Anda. Anda dapat melacak posisi via WhatsApp notifikasi.</p>
-                  <button className="btn btn-outline" style={{ marginTop: '16px' }} onClick={() => { setTransactionState('idle'); setSelectedStock(''); setRequestVol(''); }}>Buat Pesanan Baru</button>
-                </div>
-              )}
-
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════════ INFORMASI LAYANAN ════════════════ */}
-      <section className="driver-section driver-section--alt">
-        <div className="container">
-          <div className="section-title-wrapper">
-            <span className="section-label" style={{ background: 'rgba(59,130,246,0.1)', color: '#1d4ed8' }}>
-              <Search size={14} />
-              Ringkasan
-            </span>
-            <h2 className="section-title">Profil Layanan Distribusi</h2>
-            <p className="section-desc">
-              Kapasitas dan cakupan layanan kami untuk mitra distributor.
-            </p>
-          </div>
-
-          <div className="driver-info__grid" ref={infoRef} style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
-            {infoCards.map((card, idx) => (
-              <div className="driver-info-card" key={idx}>
-                <div
-                  className="driver-info-card__icon"
-                  style={{ background: card.color, color: card.iconColor }}
-                >
-                  {card.icon}
-                </div>
-                <h3 className="driver-info-card__title">{card.title}</h3>
-                <p className="driver-info-card__value">{card.value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════════ FAQ ════════════════ */}
-      <section className="driver-section">
-        <div className="container">
-          <div className="section-title-wrapper">
-            <span className="section-label" style={{ background: 'rgba(59,130,246,0.1)', color: '#1d4ed8' }}>
-              <HelpCircle size={14} />
-              FAQ
-            </span>
-            <h2 className="section-title">Pertanyaan Seputar Pasokan</h2>
-          </div>
-
-          <div className="driver-faq">
-            {faqData.map((item, idx) => (
-              <div
-                className={`driver-faq__item ${openFaq === idx ? 'open' : ''}`}
-                key={idx}
-              >
-                <button
-                  className="driver-faq__question"
-                  onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                >
-                  <span>{item.q}</span>
-                  <ChevronDown size={18} className="driver-faq__chevron" />
-                </button>
-                <div className="driver-faq__answer">
-                  <div className="driver-faq__answer-content">{item.a}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════════ FOOTER ════════════════ */}
-      <footer className="driver-footer">
-        <div className="driver-footer__container">
-          <div>
-            <h3 className="driver-footer__title">PanganDali — Mitra Distributor</h3>
-            <p className="driver-footer__desc">
-              Menghubungkan pusat produksi dengan pusat distribusi secara efisien melalui platform digital terintegrasi.
-            </p>
-            <p className="driver-footer__copy">
-              © {new Date().getFullYear()} PanganDali. Dibangun dengan <Heart size={12} style={{ color: '#ef4444', display: 'inline-block' }} /> untuk stabilitas harga pangan.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <PortalFooter title="PanganDali · Mitra Distributor" desc="Stok tervalidasi, pesanan, dan pengiriman searah dalam satu catatan." />
     </div>
   );
 }

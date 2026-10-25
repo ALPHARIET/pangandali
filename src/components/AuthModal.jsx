@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { api, login } from '../api';
 import { X, Mail, Lock, User, Briefcase, CheckCircle, AlertTriangle } from 'lucide-react';
 
 function AuthModal({ isOpen, onClose, onLoginSuccess }) {
@@ -18,6 +19,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
   // Status states
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   // Clear messages and forms when tab changes or modal closes
   useEffect(() => {
@@ -37,8 +39,8 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
 
   if (!isOpen) return null;
 
-  // Handle Login
-  const handleLoginSubmit = (e) => {
+  // Handle Login (lewat backend: password di-hash di server, sesi memakai JWT)
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
@@ -48,111 +50,31 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
       return;
     }
 
-    let foundUser = null;
-    let isDriverLogin = false;
-    let isDistributorLogin = false;
-
-    // Support admin credentials
-    if (loginIdentifier.toLowerCase() === 'admin' && loginPassword === 'admin') {
-      foundUser = {
-        name: 'Admin (Dinas Pertanian)',
-        email: 'admin@pangandali.id',
-        password: 'admin',
-        role: 'Admin'
-      };
-    } else {
-      // Check driver accounts
-      const defaultDrivers = [
-        {
-          name: 'Andi Pratama',
-          email: 'driver',
-          phone: '081234567890',
-          password: 'driver123',
-          role: 'Driver',
-          isFirstLogin: true,
-          verificationStatus: 'none'
-        }
-      ];
-      const storedDrivers = JSON.parse(localStorage.getItem('pangandali_drivers') || '[]');
-      const allDrivers = [...defaultDrivers, ...storedDrivers];
-
-      const driverMatch = allDrivers.find(
-        (u) =>
-          (u.email?.toLowerCase() === loginIdentifier.toLowerCase() ||
-            u.phone === loginIdentifier) &&
-          u.password === loginPassword
-      );
-
-      // Check distributor accounts
-      const defaultDistributors = [
-        {
-          name: 'Budi (Grosir)',
-          email: 'distributor',
-          phone: '081299998888',
-          password: 'distributor123',
-          role: 'Distributor',
-          isFirstLogin: true,
-          verificationStatus: 'none'
-        }
-      ];
-      const storedDistributors = JSON.parse(localStorage.getItem('pangandali_distributors') || '[]');
-      const allDistributors = [...defaultDistributors, ...storedDistributors];
-
-      const distributorMatch = allDistributors.find(
-        (u) =>
-          (u.email?.toLowerCase() === loginIdentifier.toLowerCase() ||
-            u.phone === loginIdentifier) &&
-          u.password === loginPassword
-      );
-
-      if (driverMatch) {
-        foundUser = driverMatch;
-        isDriverLogin = true;
-      } else if (distributorMatch) {
-        foundUser = distributorMatch;
-        isDistributorLogin = true;
-      } else {
-        // Get registered users from localStorage
-        const users = JSON.parse(localStorage.getItem('pangandali_users') || '[]');
-        
-        // Default normal user account for easy testing
-        const defaultUser = {
-          name: 'Budi Santoso',
-          email: 'budi@pangandali.id',
-          password: 'password123',
-          role: 'TPID'
-        };
-        
-        const allUsers = [defaultUser, ...users];
-
-        foundUser = allUsers.find(
-          (u) => u.email.toLowerCase() === loginIdentifier.toLowerCase() && u.password === loginPassword
-        );
-      }
-    }
-
-    if (foundUser) {
+    setSubmitting(true);
+    try {
+      const foundUser = await login(loginIdentifier.trim(), loginPassword);
       setSuccessMsg('Login berhasil! Mengalihkan...');
+      // Sesi per peran masih dipakai komponen Driver/Distributor yang belum dimigrasi ke API.
+      const sessionKey =
+        foundUser.role === 'Driver'
+          ? 'pangandali_driver_session'
+          : foundUser.role === 'Distributor'
+            ? 'pangandali_distributor_session'
+            : 'pangandali_session';
+      localStorage.setItem(sessionKey, JSON.stringify(foundUser));
       setTimeout(() => {
-        if (isDriverLogin) {
-          // Save driver session separately
-          localStorage.setItem('pangandali_driver_session', JSON.stringify(foundUser));
-        } else if (isDistributorLogin) {
-          // Save distributor session separately
-          localStorage.setItem('pangandali_distributor_session', JSON.stringify(foundUser));
-        } else {
-          localStorage.setItem('pangandali_session', JSON.stringify(foundUser));
-        }
         onLoginSuccess(foundUser);
         onClose();
-      }, 1200);
-    } else {
-      setErrorMsg('Email atau password salah.');
+      }, 600);
+    } catch (err) {
+      setErrorMsg(err.message || 'Email atau password salah.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  // Handle Register (Sign Up)
-  const handleRegisterSubmit = (e) => {
+  // Handle Register (Sign Up) untuk Mitra Logistik / Distributor
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
@@ -162,15 +84,14 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
       return;
     }
 
-    // Email regex validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(signupEmail)) {
       setErrorMsg('Format email tidak valid.');
       return;
     }
 
-    if (signupPassword.length < 6) {
-      setErrorMsg('Password harus minimal 6 karakter.');
+    if (signupPassword.length < 8) {
+      setErrorMsg('Password harus minimal 8 karakter.');
       return;
     }
 
@@ -179,34 +100,27 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
       return;
     }
 
-    // Check if email already registered
-    const users = JSON.parse(localStorage.getItem('pangandali_users') || '[]');
-    const emailExists = users.some(
-      (u) => u.email.toLowerCase() === signupEmail.toLowerCase() || signupEmail.toLowerCase() === 'budi@pangandali.id'
-    );
-
-    if (emailExists) {
-      setErrorMsg('Email sudah terdaftar.');
-      return;
+    setSubmitting(true);
+    try {
+      await api('/api/auth/register', {
+        method: 'POST',
+        body: {
+          name: signupName,
+          email: signupEmail,
+          password: signupPassword,
+          role: signupRole === 'Distributor' ? 'distributor' : 'driver',
+        },
+      });
+      setSuccessMsg('Pendaftaran berhasil! Silakan masuk.');
+      setTimeout(() => {
+        setActiveTab('login');
+        setLoginIdentifier(signupEmail);
+      }, 1500);
+    } catch (err) {
+      setErrorMsg(err.message);
+    } finally {
+      setSubmitting(false);
     }
-
-    // Register user
-    const newUser = {
-      name: signupName,
-      email: signupEmail,
-      role: signupRole,
-      password: signupPassword
-    };
-
-    users.push(newUser);
-    localStorage.setItem('pangandali_users', JSON.stringify(users));
-
-    setSuccessMsg('Pendaftaran berhasil! Silakan masuk.');
-    setTimeout(() => {
-      // Auto-switch to login tab
-      setActiveTab('login');
-      setLoginIdentifier(signupEmail);
-    }, 1500);
   };
 
   return (
@@ -221,7 +135,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
             <div className="logo-icon">PD</div>
             <span>PanganDali</span>
           </div>
-          <p className="text-muted">Akses Platform Intelijen Distribusi Pangan</p>
+          <p className="text-muted">Masuk ke platform koordinasi distribusi pangan</p>
         </div>
 
         <div className="auth-tabs">
@@ -262,7 +176,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
                 <input 
                   type="text" 
                   className="input-field" 
-                  placeholder="admin atau nama@email.com"
+                  placeholder="nama@email.com atau nomor HP"
                   autoComplete="username"
                   value={loginIdentifier}
                   onChange={(e) => setLoginIdentifier(e.target.value)}
@@ -285,15 +199,9 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
               </div>
             </div>
 
-            <div className="login-hint" style={{ fontSize: '11px', textAlign: 'center' }}>
-              <strong>Admin:</strong> admin / admin<br/>
-              <strong>TPID:</strong> budi@pangandali.id / password123<br/>
-              <strong>Mitra Logistik:</strong> driver / driver123<br/>
-              <strong>Distributor:</strong> distributor / distributor123
-            </div>
 
-            <button type="submit" className="btn btn-primary" style={{ marginTop: '8px' }}>
-              Masuk ke Dashboard
+            <button type="submit" className="btn btn-primary" style={{ marginTop: '8px' }} disabled={submitting}>
+              {submitting ? 'Memproses...' : 'Masuk ke Dashboard'}
             </button>
             
             <div className="auth-footer">
@@ -359,7 +267,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
                 <input 
                   type="password" 
                   className="input-field" 
-                  placeholder="Minimal 6 karakter"
+                  placeholder="Minimal 8 karakter"
                   value={signupPassword}
                   onChange={(e) => setSignupPassword(e.target.value)}
                 />
@@ -380,7 +288,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary" style={{ marginTop: '8px' }}>
+            <button type="submit" className="btn btn-primary" style={{ marginTop: '8px' }} disabled={submitting}>
               Daftar Sebagai {signupRole}
             </button>
             

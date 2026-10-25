@@ -35,7 +35,7 @@ function Tantangan() {
           </span>
           <h2 className="section-title">Tantangan Distribusi Pangan</h2>
           <p className="section-desc">
-            Ketidakefisienan dalam rantai pasok menyebabkan lonjakan harga dan kerugian di tingkat akar rumput.
+            Panen, permintaan pembeli, dan kapasitas angkut belum terhubung. Perjalanan kosong dan keterlambatan distribusi berpotensi memboroskan BBM serta meningkatkan susut pangan.
           </p>
         </div>
 
@@ -47,11 +47,11 @@ function Tantangan() {
             </div>
             <div className="tantangan-card-badge">
               <TrendingDown size={12} />
-              <span>Margin Petani Rendah</span>
+              <span>Belum Tertelusur</span>
             </div>
-            <h3 className="tantangan-card-title">Rantai Distribusi Panjang</h3>
+            <h3 className="tantangan-card-title">Panen dan Permintaan Belum Terhubung</h3>
             <p className="tantangan-card-desc">
-              Rantai pemasaran berlapis menggerus margin petani hingga farmer price share hanya 43% (Fitria, 2022). Transparansi harga hampir tidak ada.
+              Fitria (2022) menelaah saluran pemasaran kubis di Desa Air Duku, Selupu Rejang, dan kaitannya dengan penerimaan petani. Harga, permintaan, dan kesepakatan jual perlu dicatat lebih tertelusur agar petani dan pembeli bisa bertemu lebih awal.
             </p>
             <div className="tantangan-card-img">
               <img src="/market_trading.png" alt="Rantai Pemasaran berlapis" />
@@ -65,11 +65,11 @@ function Tantangan() {
             </div>
             <div className="tantangan-card-badge tantangan-card-badge-green">
               <AlertTriangle size={12} />
-              <span>Pemborosan Logistik</span>
+              <span>Kapasitas Angkut Terbuang</span>
             </div>
-            <h3 className="tantangan-card-title">Empty Backhaul</h3>
+            <h3 className="tantangan-card-title">Armada Pulang Kosong</h3>
             <p className="tantangan-card-desc">
-              Truk kembali kosong setelah mengantar barang. Pemborosan bahan bakar dan waktu yang secara langsung meningkatkan biaya logistik keseluruhan.
+              Kendaraan sering kembali tanpa muatan setelah mengantar barang, sementara hasil panen menunggu angkutan. Kapasitas kosong ini berpotensi memboroskan BBM dan waktu.
             </p>
             <div className="tantangan-card-img">
               <img src="/empty_backhaul.png" alt="Empty Backhaul Logistik" />

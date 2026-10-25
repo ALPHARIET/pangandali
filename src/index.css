@@ -351,56 +351,58 @@ img { max-width: 100%; height: auto; display: block; }
   font-size: 10px;
 }
 
-/* ─── Island: EXPAND on hover ─── */
-.navbar--island:hover .navbar-inner {
-  max-width: var(--max-width);
-  height: 52px;
-  padding: 0 24px;
-  background: rgba(255, 255, 255, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.1),
-    0 2px 8px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
+/* ─── Island: EXPAND on hover (hanya perangkat ber-mouse; di layar sentuh :hover 'nyangkut') ─── */
+@media (hover: hover) and (min-width: 769px) {
+  .navbar--island:hover .navbar-inner {
+    max-width: var(--max-width);
+    height: 52px;
+    padding: 0 24px;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
 
-.navbar--island:hover {
-  padding: 14px 28px;
-}
+  .navbar--island:hover {
+    padding: 14px 28px;
+  }
 
-.navbar--island:hover .logo-text {
-  max-width: 200px;
-  opacity: 1;
-}
+  .navbar--island:hover .logo-text {
+    max-width: 200px;
+    opacity: 1;
+  }
 
-.navbar--island:hover .search-bar {
-  max-width: 200px;
-  opacity: 1;
-  padding: 7px 14px;
-  border: 1px solid transparent;
-}
+  .navbar--island:hover .search-bar {
+    max-width: 200px;
+    opacity: 1;
+    padding: 7px 14px;
+    border: 1px solid transparent;
+  }
 
-.navbar--island:hover .logo-icon {
-  width: 34px;
-  height: 34px;
-  font-size: 17px;
-}
+  .navbar--island:hover .logo-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 17px;
+  }
 
-.navbar--island:hover .icon-btn {
-  color: var(--text-secondary);
-  width: 36px;
-  height: 36px;
-}
+  .navbar--island:hover .icon-btn {
+    color: var(--text-secondary);
+    width: 36px;
+    height: 36px;
+  }
 
-.navbar--island:hover .btn-cta-nav {
-  padding: 8px 20px;
-  font-size: 13px;
-}
+  .navbar--island:hover .btn-cta-nav {
+    padding: 8px 20px;
+    font-size: 13px;
+  }
 
-.navbar--island:hover .avatar-circle {
-  width: 34px;
-  height: 34px;
-  font-size: 12px;
+  .navbar--island:hover .avatar-circle {
+    width: 34px;
+    height: 34px;
+    font-size: 12px;
+  }
 }
 
 /* Logo */
@@ -625,7 +627,8 @@ img { max-width: 100%; height: auto; display: block; }
 .hero-content-wrapper {
   position: relative;
   z-index: 2;
-  padding: 160px 0 120px;
+  padding-top: 160px;
+  padding-bottom: 120px;
 }
 
 .hero-content {
@@ -634,7 +637,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 @media (max-width: 768px) {
-  .hero-content-wrapper { padding: 140px 0 80px; }
+  .hero-content-wrapper { padding-top: 128px; padding-bottom: 72px; }
   .hero-content { max-width: 100%; }
   .hero-bg-overlay {
     background:
@@ -858,11 +861,11 @@ img { max-width: 100%; height: auto; display: block; }
 
 .solusi-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   position: relative;
 }
-@media (max-width: 992px) {
+@media (max-width: 1100px) {
   .solusi-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 768px) {
@@ -1222,13 +1225,16 @@ img { max-width: 100%; height: auto; display: block; }
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   z-index: 2000;
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s var(--ease-out);
   padding: 20px;
+  /* Form daftar bisa lebih tinggi dari layar HP: overlay yang di-scroll, bukan isinya terpotong */
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .modal-overlay.open {
   opacity: 1;
@@ -1247,6 +1253,7 @@ img { max-width: 100%; height: auto; display: block; }
   transition: all 0.4s var(--ease-spring);
   padding: 40px;
   border: 1px solid var(--border);
+  margin: auto;
 }
 .modal-overlay.open .modal-content {
   transform: translateY(0) scale(1);
@@ -1442,17 +1449,24 @@ img { max-width: 100%; height: auto; display: block; }
    Responsive
    ========================================================== */
 @media (max-width: 480px) {
-  .hero-content-wrapper { padding: 120px 0 60px; }
+  .hero-content-wrapper { padding-top: 112px; padding-bottom: 56px; }
   .hero-badge { font-size: 11px; padding: 6px 14px; }
   .nav-actions .search-bar { display: none; }
   .dampak-banner { padding: 28px 20px; }
   .stat-num { font-size: 32px; }
   .modal-content { padding: 28px 20px; }
-  .navbar--island .navbar-inner { max-width: calc(100% - 32px); }
+  .modal-overlay { padding: 12px; }
 }
 
 @media (max-width: 768px) {
-  .navbar--island .navbar-inner { max-width: calc(100% - 40px); }
+  .navbar,
+  .navbar--island { padding: 10px 16px; }
+  .navbar-inner { padding: 0 6px 0 14px; height: 50px; }
+  .navbar--island .navbar-inner { max-width: 100%; }
+  /* Di HP nama brand tetap tampil saat scroll; ikon notifikasi/pesan disembunyikan supaya tombol Masuk tidak terpotong */
+  .navbar--island .logo-text { max-width: 200px; opacity: 1; }
+  .nav-actions .icon-btn { display: none; }
+  .logo-wrapper { font-size: 17px; gap: 8px; }
 }
 
 /* ==========================================================
@@ -1548,8 +1562,21 @@ img { max-width: 100%; height: auto; display: block; }
 }
 
 @media (max-width: 640px) {
-  .info-publik-card { padding: 16px; }
-  .info-publik-table { font-size: 13px; }
-  .info-publik-table thead th,
-  .info-publik-table tbody td { padding: 8px 10px; }
+  .info-publik-card { padding: 12px; }
+  .info-publik-table thead { display: none; }
+  .info-publik-table,
+  .info-publik-table tbody { display: block; }
+  .info-publik-table tbody tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px 12px;
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .info-publik-table tbody tr:last-child { border-bottom: none; }
+  .info-publik-table tbody td { display: block; padding: 0; border: none; font-size: 14px; }
+  .info-publik-table tbody td:nth-child(1) { font-weight: 700; color: var(--text-primary); }
+  .info-publik-table tbody td:nth-child(2) { grid-column: 1; grid-row: 2; color: var(--text-secondary); font-size: 13px; }
+  .info-publik-table tbody td:nth-child(3) { grid-column: 2; grid-row: 1; justify-self: end; }
+  .info-publik-table tbody td:nth-child(4) { grid-column: 2; grid-row: 2; justify-self: end; font-size: 13px; }
 }

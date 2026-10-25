@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { MessageSquare, Cpu, AlertTriangle, ArrowRight, Zap } from 'lucide-react';
+import { MessageSquare, Route, AlertTriangle, Gauge, ArrowRight, Zap } from 'lucide-react';
 
 function Solusi() {
   const gridRef = useRef(null);
@@ -28,21 +28,27 @@ function Solusi() {
   const solutions = [
     {
       icon: MessageSquare,
-      title: 'WhatsApp NLP',
-      desc: 'Petani dapat melaporkan panen dan harga langsung melalui antarmuka chat WhatsApp yang familier, diproses otomatis oleh Natural Language Processing.',
-      tag: 'Input Cerdas'
+      title: 'Laporan Panen via WhatsApp',
+      desc: 'Petani terdaftar melapor dengan bahasa sehari-hari. Komoditas, jumlah, lokasi, waktu, dan harga harapan diekstraksi dengan aturan, kamus, dan model bahasa. Petani mengonfirmasi ringkasan, lalu admin memvalidasi.',
+      tag: 'Ekstraksi + Konfirmasi'
     },
     {
-      icon: Cpu,
-      title: 'Smart Matching',
-      desc: 'Algoritma cerdas mencocokkan pasokan petani dengan permintaan distributor terdekat dan mengoptimalkan rute armada untuk meminimalkan empty backhaul.',
-      tag: 'Optimasi AI'
+      icon: Route,
+      title: 'Pencocokan Muatan Balik',
+      desc: 'Armada disaring berdasarkan kapasitas, komoditas, rute, dan waktu, lalu diurutkan menurut tambahan jarak, tingkat isian, dan keandalan. Rekomendasi baru menjadi tugas setelah mitra setuju.',
+      tag: 'Aturan & Skor'
     },
     {
       icon: AlertTriangle,
-      title: 'EWS (Early Warning System)',
-      desc: 'Dashboard real-time untuk TPID mendeteksi anomali pasokan atau lonjakan harga, memungkinkan intervensi pasar yang cepat dan tepat sasaran.',
-      tag: 'Monitoring'
+      title: 'Peringatan Pasokan',
+      desc: 'Dashboard menampilkan pasokan, transaksi, dan distribusi dengan peringatan berbasis ambang yang disepakati. Dashboard tidak menggantikan survei harga resmi atau kewenangan TPID.',
+      tag: 'Berbasis Ambang'
+    },
+    {
+      icon: Gauge,
+      title: 'Pengukuran Efisiensi',
+      desc: 'Setiap kiriman mencatat berat muat dan terima, km rute dan deviasi, BBM, serta waktu. Susut dan BBM bersih dihitung terhadap skenario pembanding; data yang kurang ditandai.',
+      tag: 'Dampak Terukur'
     }
   ];
 
@@ -55,7 +61,7 @@ function Solusi() {
               <Zap size={14} />
               Solusi Kami
             </span>
-            <h2 className="section-title">Teknologi Presisi untuk Pertanian</h2>
+            <h2 className="section-title">Satu Aliran Data, dari Panen sampai Pengiriman</h2>
           </div>
           <a href="#carakerja" className="solusi-link">
             <span>Pelajari Fitur Lengkap</span>
