@@ -29,7 +29,7 @@ function Navbar({ user, onLogout, onOpenAuth }) {
     <nav className={`navbar ${scrolled ? 'navbar--island' : ''}`}>
       <div className="navbar-inner">
         <div className="logo-wrapper">
-          <div className="logo-icon">🌾</div>
+          <img src="/logo.png" alt="" className="logo-icon" />
           <span className="logo-text">PanganDali</span>
         </div>
 

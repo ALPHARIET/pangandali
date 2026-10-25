@@ -420,12 +420,9 @@ img { max-width: 100%; height: auto; display: block; }
 .logo-icon {
   width: 34px;
   height: 34px;
-  background: var(--primary-dark);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 17px;
+  flex-shrink: 0;
+  object-fit: contain;
+  display: block;
   transition: var(--transition-base);
 }
 

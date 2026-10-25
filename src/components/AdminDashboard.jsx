@@ -72,7 +72,7 @@ function AdminDashboard({ user, onLogout, isTPID }) {
       <div className="admin-sidebar-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />
       <aside className="admin-sidebar" id="admin-sidebar">
         <div className="admin-sidebar-logo">
-          <div className="logo-icon">PD</div>
+          <img src="/logo.png" alt="" className="logo-icon" />
           <span>PanganDali</span>
           <button className="admin-sidebar-close" onClick={() => setMenuOpen(false)} aria-label="Tutup menu">
             <X size={20} />

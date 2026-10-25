@@ -57,7 +57,7 @@ export function PortalBar({ role, user, links, onLogout }) {
       <div className="portal-wrap">
         <div className="portal-bar__row">
           <div className="portal-brand">
-            <div className="portal-brand__icon" aria-hidden="true">PD</div>
+            <img src="/logo.png" alt="" className="portal-brand__icon" />
             <span>PanganDali</span>
             <span className="portal-brand__role">{role}</span>
           </div>

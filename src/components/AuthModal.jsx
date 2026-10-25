@@ -132,7 +132,7 @@ function AuthModal({ isOpen, onClose, onLoginSuccess }) {
 
         <div className="auth-header">
           <div className="auth-logo">
-            <div className="logo-icon">PD</div>
+            <img src="/logo.png" alt="" className="logo-icon" />
             <span>PanganDali</span>
           </div>
           <p className="text-muted">Masuk ke platform koordinasi distribusi pangan</p>
